@@ -1,0 +1,63 @@
+name: "Code Review Agent"
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to review'
+        required: true
+        type: string
+      head_branch:
+        description: 'Head branch of the PR'
+        required: true
+        type: string
+jobs:
+  trigger-review:
+    if: >-
+      (github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/issue-')) ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Dispatch review to Claude Code Agent (fn repo hosts the review agent)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_DISPATCH_TOKEN: ${{ secrets.GH_DISPATCH_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+          HEAD_BRANCH: ${{ github.head_ref || github.event.inputs.head_branch }}
+          GITHUB_REPOSITORY: strata-reports-ai/web-strata-reports
+        run: |
+          cat > /tmp/review-prompt.txt << ENDPROMPT
+          You are a code reviewer for a React/TypeScript frontend. Execute these steps in order.
+
+          STEP 1 — Get the PR diff:
+            gh pr diff ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports
+
+          STEP 2 — Read only files in the diff.
+
+          STEP 3 — Check for:
+            MAJOR: XSS vulnerabilities, exposed secrets/tokens, broken auth flows, data loss
+            MODERATE: significant React/TypeScript bugs, missing error states, accessibility blockers
+            (Ignore minor style issues)
+
+          STEP 4 — If NO issues: run ALL of these:
+            gh pr comment ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --body "✅ **Code review passed.** Merging."
+            GH_TOKEN="\$GH_DISPATCH_TOKEN" gh pr merge ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --squash --delete-branch
+            ISSUE_N=\$(gh pr view ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --json body --jq '.body' | grep -oP 'orchestrator-strata-reports#\K[0-9]+' | head -1)
+            if [ -n "\$ISSUE_N" ]; then
+              GH_TOKEN="\$GH_DISPATCH_TOKEN" gh issue edit "\$ISSUE_N" --repo strata-reports-ai/orchestrator-strata-reports --remove-label code-review --add-label in-test
+            fi
+
+          STEP 5 — If issues found: comment with findings and reset to in-progress.
+          ENDPROMPT
+
+          jq -n --arg prompt "$(cat /tmp/review-prompt.txt)" --arg branch "main" \
+            '{"ref":"main","inputs":{"prompt":$prompt,"branch":$branch}}' | \
+          GH_TOKEN="$GH_DISPATCH_TOKEN" gh api \
+            repos/strata-reports-ai/fn-strata-reports/actions/workflows/claude-code.yml/dispatches \
+            --method POST --input -
