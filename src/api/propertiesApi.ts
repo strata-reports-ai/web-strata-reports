@@ -49,6 +49,7 @@ export const propertiesApi = baseApi.injectEndpoints({
         },
       }),
       providesTags: ['Properties'],
+      keepUnusedDataFor: 60,
     }),
     getPropertyFilterOptions: builder.query<PropertyFilterOptions, void>({
       query: () => 'properties/filter-options',
