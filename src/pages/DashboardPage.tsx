@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -132,7 +133,7 @@ export function DashboardPage() {
   const navigate = useNavigate()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const { data, isLoading } = useGetDashboardSummaryQuery()
+  const { data, isLoading, isError } = useGetDashboardSummaryQuery()
 
   const totalProperties = data?.totalProperties ?? 0
   const reportsThisQuarter = data?.reportsThisQuarter ?? 0
@@ -170,6 +171,12 @@ export function DashboardPage() {
   return (
     <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: '100%', overflowX: 'hidden' }}>
       <Typography variant="h5" sx={{ mb: 3 }}>Dashboard</Typography>
+
+      {isError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Failed to load dashboard data. Please refresh.
+        </Alert>
+      )}
 
       <Grid2 container spacing={2} sx={{ mb: 3 }}>
         {kpiCards.map((card) => (
