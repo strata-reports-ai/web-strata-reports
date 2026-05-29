@@ -52,6 +52,11 @@ export interface UpdatePropertyRequest {
 
 export const propertiesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getProperty: builder.query<PropertyListItem, string>({
+      query: (id) => `properties/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'Properties', id }],
+      keepUnusedDataFor: 60,
+    }),
     getProperties: builder.query<PropertyListResponse, PropertyListParams>({
       query: (params) => ({
         url: 'properties',
@@ -99,6 +104,7 @@ export const propertiesApi = baseApi.injectEndpoints({
 })
 
 export const {
+  useGetPropertyQuery,
   useGetPropertiesQuery,
   useGetPropertyFilterOptionsQuery,
   useCreatePropertyMutation,

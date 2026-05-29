@@ -13,7 +13,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import {
   useCreatePropertyMutation,
   useUpdatePropertyMutation,
-  useGetPropertiesQuery,
+  useGetPropertyQuery,
 } from '../api/propertiesApi'
 
 export function PropertyFormPage() {
@@ -21,12 +21,8 @@ export function PropertyFormPage() {
   const { id } = useParams<{ id: string }>()
   const isEdit = Boolean(id)
 
-  const { data: listData } = useGetPropertiesQuery(
-    { page: 1, pageSize: 1000 },
-    { skip: !isEdit },
-  )
-
-  const existing = isEdit ? listData?.items.find((p) => p.id === id) : undefined
+  const { data: existing, isFetching: isFetchingProperty, isSuccess: isPropertyLoaded } =
+    useGetPropertyQuery(id!, { skip: !isEdit })
 
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
@@ -63,6 +59,27 @@ export function PropertyFormPage() {
     } catch {
       setError('Failed to save property. Please try again.')
     }
+  }
+
+  if (isEdit && isFetchingProperty) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (isEdit && isPropertyLoaded && !existing) {
+    return (
+      <Box>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
+          <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/properties')}>
+            Back
+          </Button>
+        </Stack>
+        <Alert severity="error">Property not found.</Alert>
+      </Box>
+    )
   }
 
   return (
