@@ -4,6 +4,7 @@ import { DashboardPage } from '../pages/DashboardPage'
 import { PropertiesPage } from '../pages/PropertiesPage'
 import { ImportsPage } from '../pages/ImportsPage'
 import { ReportsPage } from '../pages/ReportsPage'
+import { GenerateReportPage } from '../pages/GenerateReportPage'
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
       { path: 'properties', element: <PropertiesPage /> },
       { path: 'imports', element: <ImportsPage /> },
       { path: 'reports', element: <ReportsPage /> },
+      { path: 'reports/new', element: <GenerateReportPage /> },
     ],
   },
 ])
