@@ -81,7 +81,7 @@ jobs:
         run: npm run build
 
       - name: Reset issue on build failure
-        if: steps.validate.outcome == 'failure'
+        if: always() && steps.validate.outcome == 'failure'
         env:
           GH_DISPATCH_TOKEN: ${{ secrets.GH_DISPATCH_TOKEN }}
           BRANCH: ${{ github.event.inputs.branch || 'main' }}
