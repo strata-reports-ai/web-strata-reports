@@ -33,8 +33,30 @@ export interface PropertyFilterOptions {
   ownerNames: string[]
 }
 
+export interface CreatePropertyRequest {
+  name: string
+  address: string
+  city: string
+  ownerName: string
+  units: number
+}
+
+export interface UpdatePropertyRequest {
+  id: string
+  name: string
+  address: string
+  city: string
+  ownerName: string
+  units: number
+}
+
 export const propertiesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getProperty: builder.query<PropertyListItem, string>({
+      query: (id) => `properties/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'Properties', id }],
+      keepUnusedDataFor: 60,
+    }),
     getProperties: builder.query<PropertyListResponse, PropertyListParams>({
       query: (params) => ({
         url: 'properties',
@@ -55,6 +77,22 @@ export const propertiesApi = baseApi.injectEndpoints({
       query: () => 'properties/filter-options',
       providesTags: ['Properties'],
     }),
+    createProperty: builder.mutation<PropertyListItem, CreatePropertyRequest>({
+      query: (body) => ({
+        url: 'properties',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Properties'],
+    }),
+    updateProperty: builder.mutation<PropertyListItem, UpdatePropertyRequest>({
+      query: ({ id, ...body }) => ({
+        url: `properties/${id}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Properties'],
+    }),
     deleteProperty: builder.mutation<void, string>({
       query: (id) => ({
         url: `properties/${id}`,
@@ -66,7 +104,10 @@ export const propertiesApi = baseApi.injectEndpoints({
 })
 
 export const {
+  useGetPropertyQuery,
   useGetPropertiesQuery,
   useGetPropertyFilterOptionsQuery,
+  useCreatePropertyMutation,
+  useUpdatePropertyMutation,
   useDeletePropertyMutation,
 } = propertiesApi
