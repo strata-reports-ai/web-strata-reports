@@ -33,6 +33,7 @@ import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import AddchartIcon from '@mui/icons-material/Addchart'
 import {
   useGetPropertiesQuery,
   useGetPropertyFilterOptionsQuery,
@@ -205,9 +206,14 @@ export function PropertiesPage() {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
         <Typography variant="h5">Properties</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/properties/new')} size="medium">
-          Add Property
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button variant="outlined" startIcon={<AddchartIcon />} onClick={() => navigate('/reports/new')} size="medium">
+            Generate Report
+          </Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/properties/new')} size="medium">
+            Add Property
+          </Button>
+        </Stack>
       </Box>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }}>
