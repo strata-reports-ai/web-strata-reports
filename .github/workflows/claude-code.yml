@@ -87,7 +87,7 @@ jobs:
           BRANCH: ${{ github.event.inputs.branch || 'main' }}
           PROMPT: ${{ github.event.inputs.prompt || '' }}
         run: |
-          if echo "$PROMPT" | grep -qF "You are a code reviewer"; then exit 0; fi
+          if echo "$PROMPT" | grep -qEF "You are a code reviewer|REVISION REQUEST for"; then exit 0; fi
           ISSUE_N=$(echo "$BRANCH" | grep -oP 'feature/issue-\K[0-9]+' || true)
           [ -z "$ISSUE_N" ] && ISSUE_N=$(echo "$PROMPT" | grep -oP 'orchestrator-strata-reports#\K[0-9]+' | head -1 || true)
           [ -z "$ISSUE_N" ] && exit 0
@@ -114,7 +114,7 @@ jobs:
           PROMPT: ${{ github.event.inputs.prompt || '' }}
         run: |
           STEP_OUTPUT="${{ steps.claude.outputs.output }}"
-          if echo "$PROMPT" | grep -qF "You are a code reviewer"; then exit 0; fi
+          if echo "$PROMPT" | grep -qEF "You are a code reviewer|REVISION REQUEST for"; then exit 0; fi
           ISSUE_N=$(echo "$BRANCH" | grep -oP 'feature/issue-\K[0-9]+' || true)
           [ -z "$ISSUE_N" ] && ISSUE_N=$(echo "$PROMPT" | grep -oP 'Issue #\K[0-9]+' | head -1 || true)
           [ -z "$ISSUE_N" ] && exit 0
@@ -138,7 +138,7 @@ jobs:
           GH_DISPATCH_TOKEN: ${{ secrets.GH_DISPATCH_TOKEN }}
           PROMPT: ${{ github.event.inputs.prompt || '' }}
         run: |
-          if echo "$PROMPT" | grep -qF "You are a code reviewer"; then exit 0; fi
+          if echo "$PROMPT" | grep -qEF "You are a code reviewer|REVISION REQUEST for"; then exit 0; fi
           ISSUE_N=$(echo "$PROMPT" | grep -oP 'Issue #\K[0-9]+' | head -1 || true)
           PR_DATA=""
           if [ -n "$ISSUE_N" ]; then
