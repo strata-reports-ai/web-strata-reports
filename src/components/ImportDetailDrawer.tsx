@@ -40,7 +40,7 @@ export function ImportDetailDrawer({ importRow, onClose }: Props) {
           <Typography variant="h6" noWrap sx={{ flex: 1, mr: 1 }}>
             {importRow?.fileName ?? 'Import Detail'}
           </Typography>
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={onClose} size="small" aria-label="Close">
             <CloseIcon />
           </IconButton>
         </Box>

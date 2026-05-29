@@ -65,8 +65,10 @@ export function ImportsPage() {
     e.stopPropagation()
     const result = await triggerDownload(id)
     if (result.data?.url) {
+      const url = result.data.url
+      if (!url.startsWith('https://')) return
       const a = document.createElement('a')
-      a.href = result.data.url
+      a.href = url
       a.download = ''
       document.body.appendChild(a)
       a.click()

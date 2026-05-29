@@ -58,19 +58,6 @@ export const importApi = baseApi.injectEndpoints({
         url: `/imports/${id}/reprocess`,
         method: 'POST',
       }),
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          importApi.util.updateQueryData('listImports', {}, (draft) => {
-            const row = draft.find((r) => r.id === id)
-            if (row) row.status = 'pending'
-          }),
-        )
-        try {
-          await queryFulfilled
-        } catch {
-          patchResult.undo()
-        }
-      },
       invalidatesTags: (_result, _err, id) => [
         { type: 'Import', id },
         { type: 'Import', id: 'LIST' },
