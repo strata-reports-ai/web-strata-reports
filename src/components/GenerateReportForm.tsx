@@ -207,6 +207,7 @@ export function GenerateReportForm({ onSuccess, onError }: GenerateReportFormPro
             label="Custom Note (optional)"
             multiline
             minRows={3}
+            fullWidth
             value={customNote}
             onChange={(e) => setCustomNote(e.target.value.slice(0, 500))}
             inputProps={{ maxLength: 500 }}
