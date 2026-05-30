@@ -39,6 +39,21 @@ export interface PreflightParams {
   periodEnd: string
 }
 
+export interface ListReportsParams {
+  propertyId?: string
+  status?: ReportStatus[]
+  from?: string
+  to?: string
+  cursor?: string
+  pageSize?: number
+}
+
+export interface ListReportsResponse {
+  items: Report[]
+  nextCursor: string | null
+  prevCursor: string | null
+}
+
 export const reportApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPreflight: builder.query<PreflightResult, PreflightParams>({
@@ -62,9 +77,27 @@ export const reportApi = baseApi.injectEndpoints({
       providesTags: (_result, _err, id) => [{ type: 'Report', id }],
     }),
 
-    listReports: builder.query<Report[], void>({
-      query: () => 'reports',
+    listReports: builder.query<ListReportsResponse, ListReportsParams>({
+      query: (params) => ({
+        url: 'reports',
+        params: {
+          ...(params.propertyId ? { propertyId: params.propertyId } : {}),
+          ...(params.status && params.status.length > 0 ? { status: params.status.join(',') } : {}),
+          ...(params.from ? { from: params.from } : {}),
+          ...(params.to ? { to: params.to } : {}),
+          ...(params.cursor ? { cursor: params.cursor } : {}),
+          pageSize: params.pageSize ?? 25,
+        },
+      }),
       providesTags: [{ type: 'Report', id: 'LIST' }],
+    }),
+
+    deleteReport: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `reports/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'Report', id: 'LIST' }],
     }),
   }),
 })
@@ -74,5 +107,7 @@ export const {
   useLazyGetPreflightQuery,
   useGenerateReportMutation,
   useGetReportQuery,
+  useLazyGetReportQuery,
   useListReportsQuery,
+  useDeleteReportMutation,
 } = reportApi
