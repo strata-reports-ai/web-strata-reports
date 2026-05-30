@@ -32,5 +32,18 @@ export const theme = createTheme({
         fullWidth: true,
       },
     },
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: 'xl',
+      },
+      styleOverrides: {
+        root: {
+          '@media (min-width: 600px)': { maxWidth: 720 },
+          '@media (min-width: 900px)': { maxWidth: 1080 },
+          '@media (min-width: 1200px)': { maxWidth: 1280 },
+          '@media (min-width: 1536px)': { maxWidth: 1440 },
+        },
+      },
+    },
   },
 })

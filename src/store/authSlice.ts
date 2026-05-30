@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AuthUser } from '../api/authApi'
 
-export interface TenantInfo {
+export interface Tenant {
   id: string
   name: string
 }
 
 interface AuthState {
   user: AuthUser | null
-  tenant: TenantInfo | null
+  tenant: Tenant | null
   isAuthenticated: boolean
   initialised: boolean
 }
@@ -24,7 +24,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials(state, action: PayloadAction<{ user: AuthUser; tenant?: TenantInfo }>) {
+    setCredentials(state, action: PayloadAction<{ user: AuthUser; tenant?: Tenant }>) {
       state.user = action.payload.user
       state.tenant = action.payload.tenant ?? null
       state.isAuthenticated = true

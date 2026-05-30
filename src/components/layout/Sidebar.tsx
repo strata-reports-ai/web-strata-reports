@@ -15,7 +15,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import SettingsIcon from '@mui/icons-material/Settings'
 
-export const SIDEBAR_WIDTH = 240
+const SIDEBAR_WIDTH = 220
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -27,42 +27,40 @@ const NAV_ITEMS = [
 
 interface SidebarProps {
   variant: 'permanent' | 'temporary'
-  open?: boolean
-  onClose?: () => void
+  open: boolean
+  onClose: () => void
 }
 
 export function Sidebar({ variant, open, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  const content = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+  const isSelected = (path: string) => {
+    if (path === '/settings/profile') return pathname.startsWith('/settings')
+    return pathname === path || pathname.startsWith(path + '/')
+  }
+
+  const drawerContent = (
+    <Box sx={{ width: SIDEBAR_WIDTH, overflowX: 'hidden' }}>
       <Toolbar>
         <Typography variant="subtitle1" fontWeight={700} noWrap>
           StrataReport AI
         </Typography>
       </Toolbar>
-      <List sx={{ flex: 1 }}>
-        {NAV_ITEMS.map((item) => {
-          const selected =
-            item.path === '/dashboard'
-              ? pathname === '/dashboard' || pathname === '/'
-              : pathname.startsWith(item.path)
-          return (
-            <ListItemButton
-              key={item.path}
-              selected={selected}
-              onClick={() => {
-                navigate(item.path)
-                onClose?.()
-              }}
-              sx={{ minHeight: 48 }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          )
-        })}
+      <List>
+        {NAV_ITEMS.map((item) => (
+          <ListItemButton
+            key={item.path}
+            selected={isSelected(item.path)}
+            onClick={() => {
+              navigate(item.path)
+              if (variant === 'temporary') onClose()
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))}
       </List>
     </Box>
   )
@@ -81,7 +79,7 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
         },
       }}
     >
-      {content}
+      {drawerContent}
     </Drawer>
   )
 }

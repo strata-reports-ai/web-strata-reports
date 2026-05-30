@@ -18,25 +18,27 @@ export function BottomNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  const activeIndex = NAV_ITEMS.findIndex((item) => {
-    if (item.path === '/dashboard') return pathname === '/dashboard' || pathname === '/'
-    return pathname.startsWith(item.path)
-  })
+  const activeIndex = NAV_ITEMS.findIndex((item) =>
+    pathname === item.path || pathname.startsWith(item.path + '/') ||
+    (item.path === '/settings/profile' && pathname.startsWith('/settings')),
+  )
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1100 }} elevation={3}>
+    <Paper
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1100 }}
+      elevation={3}
+    >
       <BottomNavigation
         value={activeIndex === -1 ? false : activeIndex}
         onChange={(_event, index: number) => navigate(NAV_ITEMS[index].path)}
-        showLabels
-        sx={{ height: 56 }}
+        sx={{ width: '100%' }}
       >
         {NAV_ITEMS.map((item) => (
           <BottomNavigationAction
             key={item.path}
             label={item.label}
             icon={item.icon}
-            sx={{ minWidth: 48, '& .MuiBottomNavigationAction-root': { minHeight: 48 } }}
+            sx={{ minWidth: 0, px: 0.5, '& .MuiBottomNavigationAction-label': { fontSize: '0.65rem' } }}
           />
         ))}
       </BottomNavigation>

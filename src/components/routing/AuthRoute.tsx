@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { RootState } from '../../store/store'
 import { Box, CircularProgress } from '@mui/material'
 
-export function ProtectedRoute() {
+export function AuthRoute() {
   const { isAuthenticated, initialised } = useSelector((state: RootState) => state.auth)
-  const location = useLocation()
 
   if (!initialised) {
     return (
@@ -15,8 +14,8 @@ export function ProtectedRoute() {
     )
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/signin" state={{ from: location }} replace />
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return <Outlet />
