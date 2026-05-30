@@ -11,11 +11,13 @@ export function SignInPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      const result = await login({ email, password }).unwrap()
-      navigate(result.redirectTo)
-    } catch {
-    }
+    const result = await login({ email, password }).unwrap().catch(() => null)
+    if (!result) return
+    const safePath =
+      result.redirectTo?.startsWith('/') && !result.redirectTo.startsWith('//')
+        ? result.redirectTo
+        : '/'
+    navigate(safePath)
   }
 
   return (
