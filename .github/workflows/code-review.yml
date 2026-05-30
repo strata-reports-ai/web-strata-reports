@@ -46,12 +46,16 @@ jobs:
             (Ignore minor style issues)
 
           STEP 4 — If NO issues: run ALL of these:
-            gh pr comment ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --body "✅ **Code review passed.** Merging."
-            GH_TOKEN="\$GH_DISPATCH_TOKEN" gh pr merge ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --squash --delete-branch
+            gh pr comment ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --body "✅ **Code review passed.** No issues found. Deploying to dev for testing."
             ISSUE_N=\$(gh pr view ${PR_NUMBER} --repo strata-reports-ai/web-strata-reports --json body --jq '.body' | grep -oP 'orchestrator-strata-reports#\K[0-9]+' | head -1)
             if [ -n "\$ISSUE_N" ]; then
               GH_TOKEN="\$GH_DISPATCH_TOKEN" gh issue edit "\$ISSUE_N" --repo strata-reports-ai/orchestrator-strata-reports --remove-label code-review --add-label in-test
             fi
+            jq -n --arg pr "${PR_NUMBER}" --arg issue "\${ISSUE_N:-}" --arg ref "${HEAD_BRANCH}" \
+              '{"ref":"main","inputs":{"ref":\$ref,"pr_number":\$pr,"orchestrator_issue":\$issue}}' | \
+            GH_TOKEN="\$GH_DISPATCH_TOKEN" gh api \
+              repos/strata-reports-ai/web-strata-reports/actions/workflows/deploy-web.yml/dispatches \
+              --method POST --input -
 
           STEP 5 — If issues found: comment with findings and reset to in-progress.
           ENDPROMPT
