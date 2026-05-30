@@ -6,8 +6,13 @@ import { PropertyFormPage } from '../pages/PropertyFormPage'
 import { ImportsPage } from '../pages/ImportsPage'
 import { ReportsPage } from '../pages/ReportsPage'
 import { GenerateReportPage } from '../pages/GenerateReportPage'
+import { SignInPage } from '../pages/SignInPage'
 
 export const router = createBrowserRouter([
+  {
+    path: '/auth/signin',
+    element: <SignInPage />,
+  },
   {
     path: '/',
     element: <App />,
