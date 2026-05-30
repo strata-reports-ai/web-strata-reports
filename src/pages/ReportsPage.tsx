@@ -27,7 +27,9 @@ const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error
 
 export function ReportsPage() {
   const navigate = useNavigate()
-  const { data: reports, isLoading, isError } = useListReportsQuery()
+  const { data, isLoading, isError } = useListReportsQuery({})
+
+  const reports = data?.items ?? []
 
   return (
     <Box>
@@ -44,7 +46,7 @@ export function ReportsPage() {
         </Alert>
       )}
 
-      {!isLoading && !isError && reports?.length === 0 && (
+      {!isLoading && !isError && reports.length === 0 && (
         <Box
           sx={{
             display: 'flex',
@@ -68,7 +70,7 @@ export function ReportsPage() {
         </Box>
       )}
 
-      {(isLoading || (reports && reports.length > 0)) && (
+      {(isLoading || reports.length > 0) && (
         <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
           <Table size="small" aria-label="reports table">
             <TableHead>
@@ -92,7 +94,7 @@ export function ReportsPage() {
                       ))}
                     </TableRow>
                   ))
-                : reports!.map((row) => (
+                : reports.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell>
                         <Typography variant="body2" noWrap sx={{ maxWidth: { xs: 120, sm: 200 } }}>
