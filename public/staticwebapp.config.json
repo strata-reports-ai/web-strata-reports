@@ -2,5 +2,8 @@
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/assets/*", "/*.{js,css,png,ico,json}"]
+  },
+  "backend": {
+    "uri": "https://fn-strata-reports.azurewebsites.net"
   }
 }
