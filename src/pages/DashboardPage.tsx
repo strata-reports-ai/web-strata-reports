@@ -169,7 +169,7 @@ export function DashboardPage() {
   ]
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 }, maxWidth: '100%', overflowX: 'hidden' }}>
+    <Box sx={{ maxWidth: '100%', overflowX: 'hidden' }}>
       <Typography variant="h5" sx={{ mb: 3 }}>Dashboard</Typography>
 
       {isError && (
