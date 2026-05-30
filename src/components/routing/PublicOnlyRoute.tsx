@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { selectIsAuthenticated, selectIsInitialised } from '../../store/authSlice'
 import { CircularProgress, Box } from '@mui/material'
 
-export function ProtectedRoute() {
+export function PublicOnlyRoute() {
   const isInitialised = useSelector(selectIsInitialised)
   const isAuthenticated = useSelector(selectIsAuthenticated)
 
@@ -15,5 +15,5 @@ export function ProtectedRoute() {
     )
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/auth/signin" replace />
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />
 }

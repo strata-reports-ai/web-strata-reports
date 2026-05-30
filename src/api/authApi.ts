@@ -26,6 +26,15 @@ export interface RegisterResponse {
   redirectTo: string
 }
 
+export interface MeResponse {
+  user: {
+    id: string
+    email: string
+    displayName: string
+    organisationId: string
+  }
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -42,7 +51,10 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    getMe: builder.query<MeResponse, void>({
+      query: () => '/auth/me',
+    }),
   }),
 })
 
-export const { useLoginMutation, useRegisterMutation } = authApi
+export const { useLoginMutation, useRegisterMutation, useGetMeQuery } = authApi

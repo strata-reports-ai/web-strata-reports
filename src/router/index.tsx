@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { App } from '../App'
 import { ProtectedRoute } from '../components/routing/ProtectedRoute'
+import { PublicOnlyRoute } from '../components/routing/PublicOnlyRoute'
 import { DashboardPage } from '../pages/DashboardPage'
 import { PropertiesPage } from '../pages/PropertiesPage'
 import { PropertyFormPage } from '../pages/PropertyFormPage'
@@ -13,6 +14,7 @@ import { RegisterPage } from '../pages/RegisterPage'
 export const router = createBrowserRouter([
   {
     path: '/auth',
+    element: <PublicOnlyRoute />,
     children: [
       { path: 'signin', element: <SignInPage /> },
       { path: 'register', element: <RegisterPage /> },

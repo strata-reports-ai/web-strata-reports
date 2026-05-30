@@ -31,7 +31,8 @@ export function RegisterPage() {
     try {
       const result = await register({ email, password, displayName, organisationName }).unwrap()
       setSuccess(result.message)
-      setTimeout(() => navigate(result.redirectTo), 1500)
+      const safePath = result.redirectTo?.startsWith('/') ? result.redirectTo : '/dashboard'
+      setTimeout(() => navigate(safePath), 1500)
     } catch (err: unknown) {
       const fetchError = err as { data?: { error?: string }; status?: number }
       setError(fetchError?.data?.error ?? 'Registration failed. Please try again.')
