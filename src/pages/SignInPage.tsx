@@ -29,7 +29,7 @@ export function SignInPage() {
     setError(null)
     try {
       const result = await login({ email, password }).unwrap()
-      dispatch(setCredentials({ token: result.token, user: result.user }))
+      dispatch(setCredentials({ user: result.user }))
       navigate('/dashboard')
     } catch (err: unknown) {
       const fetchError = err as { data?: { error?: string }; status?: number }
