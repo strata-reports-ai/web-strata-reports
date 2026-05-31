@@ -5,7 +5,7 @@ import { AppShell } from './components/layout/AppShell'
 export function App() {
   return (
     <AppShell>
-      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
         <Outlet />
       </Box>
     </AppShell>
