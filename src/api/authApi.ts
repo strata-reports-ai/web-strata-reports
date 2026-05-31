@@ -35,6 +35,7 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getMe: builder.query<MeResponse, void>({
       query: () => 'users/me',
+      providesTags: ['Me'],
     }),
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
@@ -42,6 +43,7 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Me'],
     }),
     register: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (body) => ({

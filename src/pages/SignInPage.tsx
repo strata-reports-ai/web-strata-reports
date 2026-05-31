@@ -12,15 +12,19 @@ export function SignInPage() {
   const [login, { isLoading, error }] = useLoginMutation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [sessionError, setSessionError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSessionError(null)
     const result = await login({ email, password }).unwrap().catch(() => null)
     if (!result) return
     const meResult = await dispatch(authApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
-    if (meResult.data) {
-      dispatch(setCredentials(meResult.data))
+    if (!meResult.data) {
+      setSessionError('Sign-in succeeded but we could not load your profile. Please try again.')
+      return
     }
+    dispatch(setCredentials(meResult.data))
     const safePath =
       result.redirectTo?.startsWith('/') && !result.redirectTo.startsWith('//')
         ? result.redirectTo
@@ -64,6 +68,11 @@ export function SignInPage() {
           {error && (
             <Typography color="error" variant="body2">
               Invalid email or password.
+            </Typography>
+          )}
+          {sessionError && (
+            <Typography color="error" variant="body2">
+              {sessionError}
             </Typography>
           )}
           <Button type="submit" variant="contained" disabled={isLoading} fullWidth>
