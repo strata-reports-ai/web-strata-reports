@@ -18,9 +18,8 @@ export function SignInPage() {
     const result = await login({ email, password }).unwrap().catch(() => null)
     if (!result) return
     const meResult = await dispatch(authApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
-    if (meResult.data) {
-      dispatch(setCredentials(meResult.data))
-    }
+    if (!meResult.data) return
+    dispatch(setCredentials(meResult.data))
     const safePath =
       result.redirectTo?.startsWith('/') && !result.redirectTo.startsWith('//')
         ? result.redirectTo
