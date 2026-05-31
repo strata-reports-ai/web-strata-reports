@@ -9,8 +9,8 @@ const SIDEBAR_WIDTH = 220
 export function AppShell({ children }: { children: React.ReactNode }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'))
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
+  const isTablet = useMediaQuery('(min-width:600px) and (max-width:1023px)')
+  const isDesktop = useMediaQuery('(min-width:1024px)')
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   if (isMobile) {
