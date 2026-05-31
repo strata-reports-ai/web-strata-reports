@@ -4,11 +4,14 @@ export interface AuthUser {
   id: string
   email: string
   displayName: string | null
+  organisationId: string
   role: string
   isEmailVerified: boolean
 }
 
-export type MeResponse = AuthUser
+export interface MeResponse {
+  user: AuthUser
+}
 
 export interface LoginRequest {
   email: string
