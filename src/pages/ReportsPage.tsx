@@ -21,6 +21,7 @@ import { useListReportsQuery, type ReportStatus } from '../api/reportSlice'
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
   generating: 'info',
+  processing: 'info',
   succeeded: 'success',
   failed: 'error',
 }
