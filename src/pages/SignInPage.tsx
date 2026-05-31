@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
-import { useLoginMutation } from '../api/authApi'
+import { useLoginMutation, authApi } from '../api/authApi'
+import { setCredentials } from '../store/authSlice'
+import { AppDispatch } from '../store/store'
 
 export function SignInPage() {
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
   const [login, { isLoading, error }] = useLoginMutation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -13,6 +17,10 @@ export function SignInPage() {
     e.preventDefault()
     const result = await login({ email, password }).unwrap().catch(() => null)
     if (!result) return
+    const meResult = await dispatch(authApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+    if (meResult.data) {
+      dispatch(setCredentials(meResult.data))
+    }
     const safePath =
       result.redirectTo?.startsWith('/') && !result.redirectTo.startsWith('//')
         ? result.redirectTo
