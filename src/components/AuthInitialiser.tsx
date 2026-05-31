@@ -10,7 +10,7 @@ export function AuthInitialiser() {
 
   useEffect(() => {
     if (data) {
-      dispatch(setCredentials(data))
+      dispatch(setCredentials(data.user))
     } else if (isError) {
       dispatch(clearCredentials())
     }
