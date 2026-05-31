@@ -6,6 +6,7 @@ import { PropertyFormPage } from '../pages/PropertyFormPage'
 import { ImportsPage } from '../pages/ImportsPage'
 import { ReportsPage } from '../pages/ReportsPage'
 import { GenerateReportPage } from '../pages/GenerateReportPage'
+import { ReportDetailPage } from '../pages/ReportDetailPage'
 import { SignInPage } from '../pages/SignInPage'
 
 export const router = createBrowserRouter([
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       { path: 'imports', element: <ImportsPage /> },
       { path: 'reports', element: <ReportsPage /> },
       { path: 'reports/new', element: <GenerateReportPage /> },
+      { path: 'reports/:id', element: <ReportDetailPage /> },
     ],
   },
 ])
