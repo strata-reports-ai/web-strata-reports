@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import {
   Alert,
   Box,
@@ -91,10 +91,13 @@ function MetaRow({ label, value }: MetaRowProps) {
 export function ReportDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const [isPolling, setIsPolling] = useState(false)
+  const [isPolling, setIsPolling] = useState(
+    !!(location.state as { startPolling?: boolean } | null)?.startPolling,
+  )
   const [iframeError, setIframeError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [regenerateError, setRegenerateError] = useState<string | null>(null)
@@ -127,17 +130,24 @@ export function ReportDetailPage() {
     }
   }, [isPolling, pollingState, handlePollingDone])
 
+  const [downloadError, setDownloadError] = useState<string | null>(null)
+
   const handleDownload = async () => {
     if (!id) return
-    const result = await refetch()
-    const url = result.data?.pdfUrl
-    if (!url) return
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `report-${id}.pdf`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    try {
+      const result = await refetch()
+      const url = result.data?.pdfUrl
+      if (!url) return
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `report-${id}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      setDownloadError(null)
+    } catch {
+      setDownloadError('Failed to download report. Please try again.')
+    }
   }
 
   const handleRegenerateConfirm = async () => {
@@ -151,8 +161,7 @@ export function ReportDetailPage() {
         periodEnd: report.periodEnd,
       }).unwrap()
       setRegenerateError(null)
-      navigate(`/reports/${result.reportId}`)
-      setIsPolling(true)
+      navigate(`/reports/${result.reportId}`, { state: { startPolling: true } })
     } catch {
       setRegenerateError('Failed to regenerate report. Please try again.')
     }
@@ -338,6 +347,12 @@ export function ReportDetailPage() {
       {regenerateError && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setRegenerateError(null)}>
           {regenerateError}
+        </Alert>
+      )}
+
+      {downloadError && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setDownloadError(null)}>
+          {downloadError}
         </Alert>
       )}
 
