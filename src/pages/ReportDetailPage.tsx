@@ -132,12 +132,14 @@ export function ReportDetailPage() {
 
   const [downloadError, setDownloadError] = useState<string | null>(null)
 
+  const isSafeUrl = (url: string) => url.startsWith('https://')
+
   const handleDownload = async () => {
     if (!id) return
     try {
       const result = await refetch()
       const url = result.data?.pdfUrl
-      if (!url) return
+      if (!url || !isSafeUrl(url)) return
       const a = document.createElement('a')
       a.href = url
       a.download = `report-${id}.pdf`
@@ -377,10 +379,9 @@ export function ReportDetailPage() {
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
             PDF Preview
           </Typography>
-          {!iframeError && report?.pdfUrl ? (
+          {!iframeError && report?.pdfUrl && isSafeUrl(report.pdfUrl) ? (
             <Box
               component="iframe"
-              // pdfUrl is a server-controlled value from a trusted API response; origin validation is enforced server-side
               src={report.pdfUrl}
               onError={() => setIframeError(true)}
               sx={{
