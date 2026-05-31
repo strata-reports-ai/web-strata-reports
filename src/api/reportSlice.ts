@@ -1,6 +1,6 @@
 import { baseApi } from './baseApi'
 
-export type ReportStatus = 'queued' | 'generating' | 'succeeded' | 'failed'
+export type ReportStatus = 'queued' | 'generating' | 'processing' | 'succeeded' | 'failed'
 
 export interface Report {
   id: string
