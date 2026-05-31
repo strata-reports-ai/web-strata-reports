@@ -28,7 +28,8 @@ const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error
 
 export function ReportsPage() {
   const navigate = useNavigate()
-  const { data: reports, isLoading, isError } = useListReportsQuery()
+  const { data, isLoading, isError } = useListReportsQuery()
+  const reports = data?.items
 
   return (
     <Box>
@@ -45,7 +46,7 @@ export function ReportsPage() {
         </Alert>
       )}
 
-      {!isLoading && !isError && reports?.length === 0 && (
+      {!isLoading && !isError && data !== undefined && reports?.length === 0 && (
         <Box
           sx={{
             display: 'flex',
