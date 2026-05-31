@@ -15,13 +15,24 @@ export interface DashboardSummary {
   recentActivity: AuditLogEvent[]
 }
 
+export interface AuditLogParams {
+  limit?: number
+}
+
 export const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardSummary: builder.query<DashboardSummary, void>({
       query: () => 'dashboard/summary',
       providesTags: ['Property', 'Import', 'Report'],
     }),
+    getAuditLog: builder.query<AuditLogEvent[], AuditLogParams>({
+      query: ({ limit } = {}) => ({
+        url: 'audit-log',
+        params: limit !== undefined ? { limit } : {},
+      }),
+      providesTags: ['Property', 'Import', 'Report'],
+    }),
   }),
 })
 
-export const { useGetDashboardSummaryQuery } = dashboardApi
+export const { useGetDashboardSummaryQuery, useGetAuditLogQuery } = dashboardApi
