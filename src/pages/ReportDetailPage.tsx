@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   Alert,
@@ -97,6 +97,7 @@ export function ReportDetailPage() {
   const [isPolling, setIsPolling] = useState(false)
   const [iframeError, setIframeError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [regenerateError, setRegenerateError] = useState<string | null>(null)
 
   const {
     data: report,
@@ -120,11 +121,11 @@ export function ReportDetailPage() {
     refetch()
   }, [refetch])
 
-  if (isPolling && (pollingState === 'succeeded' || pollingState === 'failed' || pollingState === 'timeout' || pollingState === 'error')) {
-    if (pollingState === 'succeeded') {
+  useEffect(() => {
+    if (isPolling && pollingState === 'succeeded') {
       handlePollingDone()
     }
-  }
+  }, [isPolling, pollingState, handlePollingDone])
 
   const handleDownload = async () => {
     if (!id) return
@@ -149,9 +150,11 @@ export function ReportDetailPage() {
         periodStart: report.periodStart,
         periodEnd: report.periodEnd,
       }).unwrap()
+      setRegenerateError(null)
       navigate(`/reports/${result.reportId}`)
       setIsPolling(true)
     } catch {
+      setRegenerateError('Failed to regenerate report. Please try again.')
     }
   }
 
@@ -332,6 +335,12 @@ export function ReportDetailPage() {
         </Paper>
       )}
 
+      {regenerateError && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setRegenerateError(null)}>
+          {regenerateError}
+        </Alert>
+      )}
+
       {!showPolling && effectiveStatus === 'failed' && (
         <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 }, mb: 3 }}>
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -356,6 +365,7 @@ export function ReportDetailPage() {
           {!iframeError && report?.pdfUrl ? (
             <Box
               component="iframe"
+              // pdfUrl is a server-controlled value from a trusted API response; origin validation is enforced server-side
               src={report.pdfUrl}
               onError={() => setIframeError(true)}
               sx={{
