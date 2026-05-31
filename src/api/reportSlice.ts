@@ -39,6 +39,13 @@ export interface PreflightParams {
   periodEnd: string
 }
 
+export interface ListReportsParams {
+  propertyId?: string
+  status?: string
+  from?: string
+  to?: string
+}
+
 export const reportApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPreflight: builder.query<PreflightResult, PreflightParams>({
@@ -62,8 +69,16 @@ export const reportApi = baseApi.injectEndpoints({
       providesTags: (_result, _err, id) => [{ type: 'Report', id }],
     }),
 
-    listReports: builder.query<Report[], void>({
-      query: () => 'reports',
+    listReports: builder.query<Report[], ListReportsParams | void>({
+      query: (params) => ({
+        url: 'reports',
+        params: {
+          ...(params?.propertyId ? { propertyId: params.propertyId } : {}),
+          ...(params?.status ? { status: params.status } : {}),
+          ...(params?.from ? { from: params.from } : {}),
+          ...(params?.to ? { to: params.to } : {}),
+        },
+      }),
       providesTags: [{ type: 'Report', id: 'LIST' }],
     }),
   }),

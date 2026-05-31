@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useListReportsQuery, type ReportStatus } from '../api/reportSlice'
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
@@ -28,7 +28,14 @@ const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error
 
 export function ReportsPage() {
   const navigate = useNavigate()
-  const { data: reports, isLoading, isError } = useListReportsQuery()
+  const [searchParams] = useSearchParams()
+  const filterParams = {
+    ...(searchParams.get('propertyId') ? { propertyId: searchParams.get('propertyId')! } : {}),
+    ...(searchParams.get('status') ? { status: searchParams.get('status')! } : {}),
+    ...(searchParams.get('from') ? { from: searchParams.get('from')! } : {}),
+    ...(searchParams.get('to') ? { to: searchParams.get('to')! } : {}),
+  }
+  const { data: reports, isLoading, isError } = useListReportsQuery(filterParams)
 
   return (
     <Box>
