@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -14,6 +15,7 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
+  Link,
   MenuItem,
   Pagination,
   Select,
@@ -25,6 +27,7 @@ import {
   TableRow,
   TableSortLabel,
   TextField,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -41,6 +44,7 @@ import {
   type PropertyListItem,
   type PropertyListParams,
 } from '../api/propertiesApi'
+import { useBillingGate } from '../hooks/useBillingGate'
 
 type SortBy = 'name' | 'last_report_date' | 'last_import_date'
 type SortDir = 'asc' | 'desc'
@@ -141,6 +145,9 @@ export function PropertiesPage() {
   const { data, isLoading, isFetching } = useGetPropertiesQuery(queryParams)
   const { data: filterOptions } = useGetPropertyFilterOptionsQuery()
   const [deleteProperty, { isLoading: isDeleting }] = useDeletePropertyMutation()
+  const { isBlocked, blockReason, propertiesAtLimit, reportsAtLimit } = useBillingGate()
+  const propertyCreateDisabled = isBlocked || propertiesAtLimit
+  const reportCreateDisabled = isBlocked || reportsAtLimit
 
   const handleSort = useCallback((column: SortBy) => {
     if (sortBy === column) {
@@ -207,14 +214,44 @@ export function PropertiesPage() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
         <Typography variant="h5">Properties</Typography>
         <Stack direction="row" spacing={1}>
-          <Button variant="outlined" startIcon={<AddchartIcon />} onClick={() => navigate('/reports/new')} size="medium">
-            Generate Report
-          </Button>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/properties/new')} size="medium">
-            Add Property
-          </Button>
+          <Tooltip title={reportCreateDisabled ? 'Upgrade your plan' : ''}>
+            <span>
+              <Button
+                variant="outlined"
+                startIcon={<AddchartIcon />}
+                onClick={() => navigate('/reports/new')}
+                size="medium"
+                disabled={reportCreateDisabled}
+              >
+                Generate Report
+              </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title={propertyCreateDisabled ? 'Upgrade your plan' : ''}>
+            <span>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => navigate('/properties/new')}
+                size="medium"
+                disabled={propertyCreateDisabled}
+              >
+                Add Property
+              </Button>
+            </span>
+          </Tooltip>
         </Stack>
       </Box>
+
+      {(isBlocked || propertiesAtLimit || reportsAtLimit) && blockReason && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {blockReason}{' '}
+          <Link component={RouterLink} to="/settings/billing">
+            Go to billing
+          </Link>
+        </Alert>
+      )}
+
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }}>
         <TextField

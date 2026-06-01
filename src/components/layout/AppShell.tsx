@@ -19,12 +19,18 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import AssessmentIcon from '@mui/icons-material/Assessment'
+import CreditCardIcon from '@mui/icons-material/CreditCard'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { label: 'Properties', icon: <HomeWorkIcon />, path: '/properties' },
   { label: 'Imports', icon: <UploadFileIcon />, path: '/imports' },
   { label: 'Reports', icon: <AssessmentIcon />, path: '/reports' },
+]
+
+const DESKTOP_NAV_ITEMS = [
+  ...NAV_ITEMS,
+  { label: 'Billing', icon: <CreditCardIcon />, path: '/settings/billing' },
 ]
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -80,7 +86,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Typography>
         </Toolbar>
         <List>
-          {NAV_ITEMS.map((item) => (
+          {DESKTOP_NAV_ITEMS.map((item) => (
             <ListItemButton
               key={item.path}
               selected={pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path))}

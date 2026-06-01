@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
 import { useLoginMutation, authApi } from '../api/authApi'
+import { propertiesApi } from '../api/propertiesApi'
 import { setCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
 
@@ -25,6 +26,13 @@ export function SignInPage() {
       return
     }
     dispatch(setCredentials(meResult.data))
+    const propsResult = await dispatch(
+      propertiesApi.endpoints.getProperties.initiate({ page: 1, pageSize: 1 }, { forceRefetch: true }),
+    )
+    if (propsResult.data && propsResult.data.totalCount === 0) {
+      navigate('/onboarding/welcome')
+      return
+    }
     const safePath =
       result.redirectTo?.startsWith('/') && !result.redirectTo.startsWith('//')
         ? result.redirectTo

@@ -13,15 +13,19 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import { Link as RouterLink } from 'react-router-dom'
 import { useGetPropertiesQuery } from '../api/propertiesApi'
 import { useLazyGetPreflightQuery, useGenerateReportMutation } from '../api/reportSlice'
+import { useBillingGate } from '../hooks/useBillingGate'
 
 const QUARTERS = [
   { label: 'Q1 (Jan–Mar)', value: 'Q1' },
@@ -84,6 +88,9 @@ export function GenerateReportForm({ onSuccess, onError }: GenerateReportFormPro
 
   const [generateReport, { isLoading: isGenerating }] = useGenerateReportMutation()
 
+  const { isBlocked, blockReason, reportsAtLimit } = useBillingGate()
+  const gated = isBlocked || reportsAtLimit
+
   useEffect(() => {
     if (selectedProperty && quarter && year) {
       const { periodStart: ps, periodEnd: pe } = getPeriodDates(quarter, year)
@@ -94,7 +101,7 @@ export function GenerateReportForm({ onSuccess, onError }: GenerateReportFormPro
   const noData = preflight && !preflight.hasSomeData
   const someData = preflight && preflight.hasSomeData && preflight.missingTypes.length > 0
   const generateDisabled =
-    !selectedProperty || preflightFetching || preflightUninitialized || noData || isGenerating
+    !selectedProperty || preflightFetching || preflightUninitialized || noData || isGenerating || gated
 
   const doGenerate = useCallback(
     async (force = false) => {
@@ -239,16 +246,29 @@ export function GenerateReportForm({ onSuccess, onError }: GenerateReportFormPro
           </Alert>
         )}
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleGenerateClick}
-          disabled={generateDisabled}
-          startIcon={isGenerating ? <CircularProgress size={18} color="inherit" /> : undefined}
-          fullWidth
-        >
-          {isGenerating ? 'Generating…' : 'Generate Report'}
-        </Button>
+        {gated && blockReason && (
+          <Alert severity="warning" icon={<WarningAmberIcon />}>
+            {blockReason}{' '}
+            <Link component={RouterLink} to="/settings/billing">
+              Go to billing
+            </Link>
+          </Alert>
+        )}
+
+        <Tooltip title={gated ? 'Upgrade your plan' : ''}>
+          <span>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGenerateClick}
+              disabled={generateDisabled}
+              startIcon={isGenerating ? <CircularProgress size={18} color="inherit" /> : undefined}
+              fullWidth
+            >
+              {isGenerating ? 'Generating…' : 'Generate Report'}
+            </Button>
+          </span>
+        </Tooltip>
       </Stack>
 
       <Dialog
