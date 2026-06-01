@@ -90,8 +90,8 @@ export function ImportsPage() {
         Import History
       </Typography>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2 }}>
-        <FormControl size="small" sx={{ minWidth: 160 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2 }} useFlexGap flexWrap="wrap">
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 160 } }}>
           <InputLabel>Type</InputLabel>
           <Select
             value={typeFilter}
@@ -105,7 +105,7 @@ export function ImportsPage() {
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 180 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 180 } }}>
           <InputLabel>Property</InputLabel>
           <Select
             value={propertyFilter}
