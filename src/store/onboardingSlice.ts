@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type OnboardingStep = 0 | 1 | 2
+export type OnboardingStep = 0 | 1 | 2 | 3
 
 interface OnboardingState {
   activeStep: OnboardingStep
@@ -10,7 +10,7 @@ function loadStep(tenantId: string): OnboardingStep {
   try {
     const raw = localStorage.getItem(`onboarding_step_${tenantId}`)
     const parsed = raw !== null ? parseInt(raw, 10) : 0
-    if (parsed === 0 || parsed === 1 || parsed === 2) return parsed as OnboardingStep
+    if (parsed === 0 || parsed === 1 || parsed === 2 || parsed === 3) return parsed as OnboardingStep
   } catch {
     // ignore
   }
