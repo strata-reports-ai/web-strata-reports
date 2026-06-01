@@ -2,6 +2,8 @@ import { baseApi } from './baseApi'
 
 export type ReportStatus = 'queued' | 'generating' | 'processing' | 'succeeded' | 'failed'
 
+export type SentToOwnerChannel = 'email' | 'download' | 'other'
+
 export interface Report {
   id: string
   propertyId: string
@@ -18,6 +20,16 @@ export interface Report {
   aiModel: string | null
   generationTimeMs: number | null
   aiCostUsd: number | null
+  sentToOwnerAt: string | null
+  sentToOwnerChannel: SentToOwnerChannel | null
+  sentToOwnerNote: string | null
+}
+
+export interface MarkSentRequest {
+  reportId: string
+  channel: SentToOwnerChannel
+  note?: string
+  force?: boolean
 }
 
 export interface GenerateReportRequest {
@@ -111,6 +123,19 @@ export const reportApi = baseApi.injectEndpoints({
         { type: 'Report', id: 'LIST' },
       ],
     }),
+
+    markReportSent: builder.mutation<Report, MarkSentRequest>({
+      query: ({ reportId, channel, note, force }) => ({
+        url: `reports/${reportId}/mark-sent`,
+        method: 'POST',
+        params: force ? { force: 'true' } : undefined,
+        body: { channel, note },
+      }),
+      invalidatesTags: (_result, _err, { reportId }) => [
+        { type: 'Report', id: reportId },
+        { type: 'Report', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -122,4 +147,5 @@ export const {
   useLazyGetReportQuery,
   useListReportsQuery,
   useDeleteReportMutation,
+  useMarkReportSentMutation,
 } = reportApi
