@@ -26,6 +26,7 @@ import {
   type ImportType,
 } from '../../api/importSlice'
 import { useGetPropertiesQuery } from '../../api/propertiesApi'
+import { track, ANALYTICS_EVENTS } from '../../services/analytics'
 
 const IMPORT_TYPES: ImportType[] = ['Revenue', 'Expenses', 'Tasks', 'Reviews', 'Inspections']
 
@@ -91,6 +92,7 @@ export function UploadDataStep() {
       })
       if (!putResp.ok) throw new Error('Upload failed')
       await confirmImport(importId).unwrap()
+      track(ANALYTICS_EVENTS.csv_uploaded, { import_type: apiImportType })
       navigate('/onboarding/generate-report')
     } catch {
       setError('Upload failed. Please try again.')

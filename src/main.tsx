@@ -7,6 +7,9 @@ import { store } from './store/store'
 import { router } from './router'
 import { theme } from './theme'
 import { AuthInitialiser } from './components/AuthInitialiser'
+import { initAnalytics } from './services/analytics'
+
+initAnalytics(import.meta.env.VITE_POSTHOG_KEY, import.meta.env.VITE_POSTHOG_HOST)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

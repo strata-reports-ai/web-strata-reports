@@ -1,5 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { track, ANALYTICS_EVENTS } from '../services/analytics'
 
 export function SignUpPage() {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ export function SignUpPage() {
           <TextField label="Full name" type="text" autoComplete="name" />
           <TextField label="Email" type="email" autoComplete="email" />
           <TextField label="Password" type="password" autoComplete="new-password" />
-          <Button variant="contained" fullWidth>
+          <Button variant="contained" fullWidth onClick={() => track(ANALYTICS_EVENTS.signup)}>
             Sign up
           </Button>
           <Button variant="text" onClick={() => navigate('/auth/signin')}>

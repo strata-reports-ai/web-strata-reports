@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import { OnboardingStepper } from '../../components/onboarding/OnboardingStepper'
 import { useCreatePropertyMutation } from '../../api/propertiesApi'
+import { track, ANALYTICS_EVENTS } from '../../services/analytics'
 
 export function AddPropertyStep() {
   const navigate = useNavigate()
@@ -49,6 +50,7 @@ export function AddPropertyStep() {
         ownerName: ownerName.trim(),
         ...(units ? { units: Number(units) } : {}),
       }).unwrap()
+      track(ANALYTICS_EVENTS.property_created)
       navigate('/onboarding/upload-data')
     } catch {
       setError('Failed to save property. Please try again.')

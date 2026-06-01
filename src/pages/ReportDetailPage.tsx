@@ -33,6 +33,7 @@ import {
   type ReportStatus,
 } from '../api/reportSlice'
 import { useReportPolling } from '../hooks/useReportPolling'
+import { track, ANALYTICS_EVENTS } from '../services/analytics'
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -121,8 +122,9 @@ export function ReportDetailPage() {
 
   const handlePollingDone = useCallback(() => {
     setIsPolling(false)
+    if (id) track(ANALYTICS_EVENTS.report_generation_succeeded, { report_id: id })
     refetch()
-  }, [refetch])
+  }, [refetch, id])
 
   useEffect(() => {
     if (isPolling && pollingState === 'succeeded') {
@@ -146,6 +148,7 @@ export function ReportDetailPage() {
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
+      track(ANALYTICS_EVENTS.report_downloaded, { report_id: id })
       setDownloadError(null)
     } catch {
       setDownloadError('Failed to download report. Please try again.')
