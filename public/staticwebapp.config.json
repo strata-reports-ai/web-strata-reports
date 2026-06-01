@@ -1,4 +1,7 @@
 {
+  "routes": [
+    { "route": "/legal/*", "allowedRoles": ["anonymous", "authenticated"] }
+  ],
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/assets/*", "/*.{js,css,png,ico,json}"]

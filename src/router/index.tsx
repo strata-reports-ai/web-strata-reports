@@ -22,6 +22,8 @@ const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ defau
 const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
+const PrivacyPage = lazy(() => import('../pages/legal/PrivacyPage').then((m) => ({ default: m.PrivacyPage })))
+const TermsPage = lazy(() => import('../pages/legal/TermsPage').then((m) => ({ default: m.TermsPage })))
 const AddPropertyStep = lazy(() => import('../pages/onboarding/AddPropertyStep').then((m) => ({ default: m.AddPropertyStep })))
 const UploadDataStep = lazy(() => import('../pages/onboarding/UploadDataStep').then((m) => ({ default: m.UploadDataStep })))
 const GenerateReportStep = lazy(() => import('../pages/onboarding/GenerateReportStep').then((m) => ({ default: m.GenerateReportStep })))
@@ -43,6 +45,13 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/dashboard" replace />,
+  },
+  {
+    path: '/legal',
+    children: [
+      { path: 'privacy', element: <Lazy><PrivacyPage /></Lazy> },
+      { path: 'terms', element: <Lazy><TermsPage /></Lazy> },
+    ],
   },
   {
     path: '/auth',
