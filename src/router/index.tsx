@@ -24,6 +24,8 @@ const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
 const PrivacyPage = lazy(() => import('../pages/legal/PrivacyPage').then((m) => ({ default: m.PrivacyPage })))
 const TermsPage = lazy(() => import('../pages/legal/TermsPage').then((m) => ({ default: m.TermsPage })))
+const HelpIndexPage = lazy(() => import('../pages/help/HelpIndexPage').then((m) => ({ default: m.HelpIndexPage })))
+const HelpArticlePage = lazy(() => import('../pages/help/HelpArticlePage').then((m) => ({ default: m.HelpArticlePage })))
 const AddPropertyStep = lazy(() => import('../pages/onboarding/AddPropertyStep').then((m) => ({ default: m.AddPropertyStep })))
 const UploadDataStep = lazy(() => import('../pages/onboarding/UploadDataStep').then((m) => ({ default: m.UploadDataStep })))
 const GenerateReportStep = lazy(() => import('../pages/onboarding/GenerateReportStep').then((m) => ({ default: m.GenerateReportStep })))
@@ -51,6 +53,13 @@ export const router = createBrowserRouter([
     children: [
       { path: 'privacy', element: <Lazy><PrivacyPage /></Lazy> },
       { path: 'terms', element: <Lazy><TermsPage /></Lazy> },
+    ],
+  },
+  {
+    path: '/help',
+    children: [
+      { index: true, element: <Lazy><HelpIndexPage /></Lazy> },
+      { path: ':slug', element: <Lazy><HelpArticlePage /></Lazy> },
     ],
   },
   {
