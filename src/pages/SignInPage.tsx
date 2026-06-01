@@ -6,6 +6,7 @@ import { useLoginMutation, authApi } from '../api/authApi'
 import { propertiesApi } from '../api/propertiesApi'
 import { setCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
+import { track, ANALYTICS_EVENTS } from '../services/analytics'
 
 export function SignInPage() {
   const navigate = useNavigate()
@@ -26,6 +27,7 @@ export function SignInPage() {
       return
     }
     dispatch(setCredentials(meResult.data))
+    track(ANALYTICS_EVENTS.login)
     const propsResult = await dispatch(
       propertiesApi.endpoints.getProperties.initiate({ page: 1, pageSize: 1 }, { forceRefetch: true }),
     )

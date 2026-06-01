@@ -21,6 +21,7 @@ import {
   useCreatePortalSessionMutation,
   type BillingStatus,
 } from '../api/billingApi'
+import { track, ANALYTICS_EVENTS } from '../services/analytics'
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '—'
@@ -96,6 +97,7 @@ export function BillingSettingsPage() {
 
   useEffect(() => {
     if (searchParams.get('checkout') === 'success') {
+      track(ANALYTICS_EVENTS.plan_changed, { source: 'stripe_checkout' })
       setSuccessOpen(true)
       const next = new URLSearchParams(searchParams)
       next.delete('checkout')

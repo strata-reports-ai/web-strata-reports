@@ -16,6 +16,7 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh'
 import { GenerateReportForm } from '../components/GenerateReportForm'
 import { useGetReportQuery, type ReportStatus } from '../api/reportSlice'
+import { track, ANALYTICS_EVENTS } from '../services/analytics'
 
 const POLL_INTERVAL_MS = 3000
 const POLL_TIMEOUT_MS = 5 * 60 * 1000
@@ -121,6 +122,7 @@ export function GenerateReportPage() {
   const [successOpen, setSuccessOpen] = useState(false)
 
   const handleFormSuccess = (reportId: string) => {
+    track(ANALYTICS_EVENTS.report_generation_started, { report_id: reportId })
     setActiveReportId(reportId)
     setPhase('polling')
   }
@@ -130,7 +132,8 @@ export function GenerateReportPage() {
     setPhase('error')
   }
 
-  const handlePollingDone = (_reportId: string) => {
+  const handlePollingDone = (reportId: string) => {
+    track(ANALYTICS_EVENTS.report_generation_succeeded, { report_id: reportId })
     setSuccessOpen(true)
     setPhase('done')
     setTimeout(() => navigate('/reports'), 2000)
