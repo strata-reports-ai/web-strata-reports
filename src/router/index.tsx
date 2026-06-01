@@ -9,6 +9,8 @@ import { GenerateReportPage } from '../pages/GenerateReportPage'
 import { SignInPage } from '../pages/SignInPage'
 import { WelcomePage } from '../pages/WelcomePage'
 import { BillingSettingsPage } from '../pages/BillingSettingsPage'
+import { AddPropertyStep } from '../pages/onboarding/AddPropertyStep'
+import { UploadDataStep } from '../pages/onboarding/UploadDataStep'
 import { ProtectedRoute } from '../components/routing/ProtectedRoute'
 
 export const router = createBrowserRouter([
@@ -21,6 +23,9 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       { path: 'welcome', element: <WelcomePage /> },
+      { path: 'add-property', element: <AddPropertyStep /> },
+      { path: 'upload-data', element: <UploadDataStep /> },
+      { path: 'generate-report', element: <GenerateReportPage /> },
     ],
   },
   {
