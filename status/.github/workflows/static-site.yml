@@ -1,0 +1,19 @@
+name: Static Site CI
+on:
+  repository_dispatch:
+    types: [static_site]
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+jobs:
+  release:
+    name: Build status website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate static site
+        uses: upptime/status-page@v1
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          POSTMARK_SMTP_TOKEN: ${{ secrets.POSTMARK_SMTP_TOKEN }}
+          CONFIG_PATH: status/.upptimerc.yml

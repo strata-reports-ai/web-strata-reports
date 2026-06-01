@@ -1,0 +1,78 @@
+# Upptime configuration for StrataReport AI
+# Docs: https://upptime.js.org
+
+owner: strata-reports-ai
+repo: web-strata-reports
+
+sites:
+  - name: Marketing site
+    url: https://strata-reports.com
+    icon: https://strata-reports.com/favicon.ico
+    tags:
+      - public
+  - name: Frontend app
+    url: https://app.strata-reports.com
+    icon: https://app.strata-reports.com/favicon.ico
+    tags:
+      - public
+  - name: Functions health probe
+    url: https://app.strata-reports.com/api/health
+    tags:
+      - api
+    expectedStatusCodes:
+      - 200
+  - name: Billing webhook
+    url: https://app.strata-reports.com/api/billing/webhook
+    method: HEAD
+    tags:
+      - api
+    expectedStatusCodes:
+      - 405
+
+# Health-check cadence: every 5 minutes for all endpoints (Upptime default).
+workflowSchedule:
+  graphs: "0 0 * * *"
+  responseTime: "0 23 * * *"
+  staticSite: "0 1 * * *"
+  summary: "0 0 * * *"
+  updates: "0 3 * * *"
+  updateTemplate: "0 0 * * 0"
+  uptime: "*/5 * * * *"
+
+status-website:
+  cname: status.strata-reports.com
+  baseUrl: /
+  logoUrl: https://strata-reports.com/logo.svg
+  name: StrataReport AI Status
+  introTitle: "**StrataReport AI** real-time service status."
+  introMessage: This is the operational status page for StrataReport AI. Subscribe via the GitHub repository to receive incident notifications.
+  navbar:
+    - title: Status
+      href: /
+    - title: GitHub
+      href: https://github.com/strata-reports-ai/web-strata-reports
+
+assignees:
+  - strata-reports-ai
+
+# Notifications:
+# - On a check transitioning to DOWN, Upptime automatically opens a GitHub issue (default).
+# - An email notification is also sent via Postmark's SMTP relay using the
+#   NOTIFICATION_EMAIL repo secret as the target address.
+notifications:
+  - type: email
+    smtpHost: smtp.postmarkapp.com
+    smtpPort: 587
+    smtpUsername: $POSTMARK_SMTP_TOKEN
+    smtpPassword: $POSTMARK_SMTP_TOKEN
+    fromEmail: status@strata-reports.com
+    toEmail: $NOTIFICATION_EMAIL
+    subject: "[StrataReport Status] $SITE_NAME is $STATUS"
+
+i18n:
+  activeIncidents: Active incidents
+  allSystemsOperational: All systems operational
+  incidentReport: "Incident report: "
+  scheduledMaintenance: Scheduled maintenance
+  upcomingMaintenance: Upcoming maintenance
+  ongoingMaintenance: Ongoing maintenance
