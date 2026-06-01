@@ -22,6 +22,8 @@ const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ defau
 const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
+const AddPropertyStep = lazy(() => import('../pages/onboarding/AddPropertyStep').then((m) => ({ default: m.AddPropertyStep })))
+const UploadDataStep = lazy(() => import('../pages/onboarding/UploadDataStep').then((m) => ({ default: m.UploadDataStep })))
 
 function PageLoader() {
   return (
@@ -58,6 +60,9 @@ export const router = createBrowserRouter([
         children: [
           { path: 'welcome', element: <Lazy><WelcomePage /></Lazy> },
           { path: 'onboarding-welcome', element: <Lazy><OnboardingWelcomePage /></Lazy> },
+          { path: 'add-property', element: <Lazy><AddPropertyStep /></Lazy> },
+          { path: 'upload-data', element: <Lazy><UploadDataStep /></Lazy> },
+          { path: 'generate-report', element: <Lazy><GenerateReportPage /></Lazy> },
         ],
       },
       {

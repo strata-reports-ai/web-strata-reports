@@ -67,6 +67,29 @@ export const importApi = baseApi.injectEndpoints({
     getDownloadUrl: builder.query<{ url: string }, string>({
       query: (id) => `/imports/${id}/download-url`,
     }),
+
+    getUploadUrl: builder.mutation<
+      { uploadUrl: string; blobPath: string },
+      { fileName: string; importType: ImportType; propertyId: string }
+    >({
+      query: (body) => ({
+        url: '/imports/upload-url',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    createImport: builder.mutation<
+      { id: string },
+      { fileName: string; importType: ImportType; propertyId: string; blobPath: string }
+    >({
+      query: (body) => ({
+        url: '/imports',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Import', id: 'LIST' }],
+    }),
   }),
 })
 
@@ -75,4 +98,6 @@ export const {
   useGetImportQuery,
   useReprocessImportMutation,
   useLazyGetDownloadUrlQuery,
+  useGetUploadUrlMutation,
+  useCreateImportMutation,
 } = importApi
