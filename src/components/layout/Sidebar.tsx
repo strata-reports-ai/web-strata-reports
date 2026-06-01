@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import {
   Box,
   Drawer,
@@ -16,9 +16,12 @@ import AssessmentIcon from '@mui/icons-material/Assessment'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import SettingsIcon from '@mui/icons-material/Settings'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import { HelpMenu } from '../help/HelpMenu'
+import MailOutlineIcon from '@mui/icons-material/MailOutline'
+import type { RootState } from '../../store/store'
 
 const SIDEBAR_WIDTH = 220
+
+const SUPPORT_EMAIL = 'support@stratareport.ai'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -34,14 +37,25 @@ interface SidebarProps {
   onClose: () => void
 }
 
+function buildMailto(tenantId: string | null): string {
+  if (tenantId) {
+    return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
+      `Support request [tenant:${tenantId}]`,
+    )}`
+  }
+  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Support request')}`
+}
+
 export function Sidebar({ variant, open, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const helpButtonRef = useRef<HTMLDivElement | null>(null)
-  const [helpOpen, setHelpOpen] = useState(false)
+  const user = useSelector((state: RootState) => state.auth.user)
+  const tenantId = user?.id ?? null
+  const mailtoHref = buildMailto(tenantId)
 
   const isSelected = (path: string) => {
     if (path === '/settings/profile') return pathname.startsWith('/settings')
+    if (path === '/help') return pathname === '/help' || pathname.startsWith('/help/')
     return pathname === path || pathname.startsWith(path + '/')
   }
 
@@ -69,27 +83,35 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
               <ListItemText primary={item.label} />
             </ListItemButton>
             {index === reportsIndex && (
-              <Box ref={helpButtonRef}>
+              <>
                 <ListItemButton
-                  onClick={() => setHelpOpen(true)}
+                  selected={isSelected('/help')}
+                  onClick={() => {
+                    navigate('/help')
+                    if (variant === 'temporary') onClose()
+                  }}
                   sx={{ minHeight: 44 }}
-                  aria-label="Open help menu"
                 >
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <HelpOutlineIcon />
                   </ListItemIcon>
                   <ListItemText primary="Help" />
                 </ListItemButton>
-              </Box>
+                <ListItemButton
+                  component="a"
+                  href={mailtoHref}
+                  sx={{ minHeight: 44 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <MailOutlineIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Contact support" />
+                </ListItemButton>
+              </>
             )}
           </Box>
         ))}
       </List>
-      <HelpMenu
-        open={helpOpen}
-        anchorEl={helpButtonRef.current}
-        onClose={() => setHelpOpen(false)}
-      />
     </Box>
   )
 
