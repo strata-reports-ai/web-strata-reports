@@ -14,6 +14,10 @@ export interface Report {
   pdfUrl: string | null
   createdAt: string
   updatedAt: string
+  generatedBy: string | null
+  aiModel: string | null
+  generationTimeMs: number | null
+  aiCostUsd: number | null
 }
 
 export interface GenerateReportRequest {

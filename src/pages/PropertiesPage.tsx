@@ -252,6 +252,7 @@ export function PropertiesPage() {
         </Alert>
       )}
 
+
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }}>
         <TextField
           label="Search"
