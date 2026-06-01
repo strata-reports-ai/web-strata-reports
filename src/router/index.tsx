@@ -8,6 +8,7 @@ import { ReportsPage } from '../pages/ReportsPage'
 import { GenerateReportPage } from '../pages/GenerateReportPage'
 import { SignInPage } from '../pages/SignInPage'
 import { WelcomePage } from '../pages/WelcomePage'
+import { BillingSettingsPage } from '../pages/BillingSettingsPage'
 import { ProtectedRoute } from '../components/routing/ProtectedRoute'
 
 export const router = createBrowserRouter([
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { path: 'imports', element: <ImportsPage /> },
       { path: 'reports', element: <ReportsPage /> },
       { path: 'reports/new', element: <GenerateReportPage /> },
+      { path: 'settings/billing', element: <BillingSettingsPage /> },
     ],
   },
 ])
