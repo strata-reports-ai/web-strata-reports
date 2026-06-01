@@ -1,6 +1,9 @@
 import { createTheme } from '@mui/material/styles'
 
 export const theme = createTheme({
+  breakpoints: {
+    values: { xs: 0, sm: 600, md: 900, lg: 1024, xl: 1280 },
+  },
   palette: {
     primary: {
       main: '#1976d2',
@@ -30,19 +33,6 @@ export const theme = createTheme({
       defaultProps: {
         size: 'small',
         fullWidth: true,
-      },
-    },
-    MuiContainer: {
-      defaultProps: {
-        maxWidth: 'xl',
-      },
-      styleOverrides: {
-        root: {
-          '@media (min-width: 600px)': { maxWidth: 720 },
-          '@media (min-width: 900px)': { maxWidth: 1080 },
-          '@media (min-width: 1200px)': { maxWidth: 1280 },
-          '@media (min-width: 1536px)': { maxWidth: 1440 },
-        },
       },
     },
   },

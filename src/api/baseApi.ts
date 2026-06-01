@@ -4,11 +4,11 @@ export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api',
+    credentials: 'include',
     prepareHeaders: (headers) => {
-      // JWT is sent via httpOnly cookie; no manual header needed
       return headers
     },
   }),
-  tagTypes: ['Property', 'Properties', 'Import', 'Report', 'Tenant'],
+  tagTypes: ['Me', 'Property', 'Properties', 'Import', 'Report', 'Tenant'],
   endpoints: () => ({}),
 })

@@ -10,12 +10,14 @@ const PropertiesPage = lazy(() => import('../pages/PropertiesPage').then((m) => 
 const PropertyFormPage = lazy(() => import('../pages/PropertyFormPage').then((m) => ({ default: m.PropertyFormPage })))
 const PropertyDetailPage = lazy(() => import('../pages/PropertyDetailPage').then((m) => ({ default: m.PropertyDetailPage })))
 const ImportsPage = lazy(() => import('../pages/ImportsPage').then((m) => ({ default: m.ImportsPage })))
-const ReportsPage = lazy(() => import('../pages/ReportsPage').then((m) => ({ default: m.ReportsPage })))
+const ReportsListPage = lazy(() => import('../pages/ReportsListPage').then((m) => ({ default: m.ReportsListPage })))
 const GenerateReportPage = lazy(() => import('../pages/GenerateReportPage').then((m) => ({ default: m.GenerateReportPage })))
 const ReportDetailPage = lazy(() => import('../pages/ReportDetailPage').then((m) => ({ default: m.ReportDetailPage })))
 const SettingsProfilePage = lazy(() => import('../pages/SettingsProfilePage').then((m) => ({ default: m.SettingsProfilePage })))
 const SettingsTenantPage = lazy(() => import('../pages/SettingsTenantPage').then((m) => ({ default: m.SettingsTenantPage })))
+const BillingSettingsPage = lazy(() => import('../pages/BillingSettingsPage').then((m) => ({ default: m.BillingSettingsPage })))
 const OnboardingWelcomePage = lazy(() => import('../pages/OnboardingWelcomePage').then((m) => ({ default: m.OnboardingWelcomePage })))
+const WelcomePage = lazy(() => import('../pages/WelcomePage').then((m) => ({ default: m.WelcomePage })))
 const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ default: m.SignInPage })))
 const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
@@ -42,27 +44,22 @@ export const router = createBrowserRouter([
     path: '/auth',
     element: <AuthRoute />,
     children: [
-      {
-        path: 'signin',
-        element: <Lazy><SignInPage /></Lazy>,
-      },
-      {
-        path: 'signup',
-        element: <Lazy><SignUpPage /></Lazy>,
-      },
-      {
-        path: 'forgot-password',
-        element: <Lazy><ForgotPasswordPage /></Lazy>,
-      },
-      {
-        path: 'reset-password',
-        element: <Lazy><ResetPasswordPage /></Lazy>,
-      },
+      { path: 'signin', element: <Lazy><SignInPage /></Lazy> },
+      { path: 'signup', element: <Lazy><SignUpPage /></Lazy> },
+      { path: 'forgot-password', element: <Lazy><ForgotPasswordPage /></Lazy> },
+      { path: 'reset-password', element: <Lazy><ResetPasswordPage /></Lazy> },
     ],
   },
   {
     element: <ProtectedRoute />,
     children: [
+      {
+        path: '/onboarding',
+        children: [
+          { path: 'welcome', element: <Lazy><WelcomePage /></Lazy> },
+          { path: 'onboarding-welcome', element: <Lazy><OnboardingWelcomePage /></Lazy> },
+        ],
+      },
       {
         element: <App />,
         children: [
@@ -72,12 +69,12 @@ export const router = createBrowserRouter([
           { path: '/properties/:id', element: <Lazy><PropertyDetailPage /></Lazy> },
           { path: '/properties/:id/edit', element: <Lazy><PropertyFormPage /></Lazy> },
           { path: '/imports', element: <Lazy><ImportsPage /></Lazy> },
-          { path: '/reports', element: <Lazy><ReportsPage /></Lazy> },
+          { path: '/reports', element: <Lazy><ReportsListPage /></Lazy> },
           { path: '/reports/new', element: <Lazy><GenerateReportPage /></Lazy> },
           { path: '/reports/:id', element: <Lazy><ReportDetailPage /></Lazy> },
           { path: '/settings/profile', element: <Lazy><SettingsProfilePage /></Lazy> },
           { path: '/settings/tenant', element: <Lazy><SettingsTenantPage /></Lazy> },
-          { path: '/onboarding/welcome', element: <Lazy><OnboardingWelcomePage /></Lazy> },
+          { path: '/settings/billing', element: <Lazy><BillingSettingsPage /></Lazy> },
         ],
       },
     ],

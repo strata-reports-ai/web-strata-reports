@@ -1,22 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AuthUser } from '../api/authApi'
 
-export interface Tenant {
-  id: string
-  name: string
-}
-
 interface AuthState {
   user: AuthUser | null
-  tenant: Tenant | null
-  isAuthenticated: boolean
   initialised: boolean
 }
 
 const initialState: AuthState = {
   user: null,
-  tenant: null,
-  isAuthenticated: false,
   initialised: false,
 }
 
@@ -24,16 +15,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials(state, action: PayloadAction<{ user: AuthUser; tenant?: Tenant }>) {
-      state.user = action.payload.user
-      state.tenant = action.payload.tenant ?? null
-      state.isAuthenticated = true
+    setCredentials(state, action: PayloadAction<AuthUser>) {
+      state.user = action.payload
       state.initialised = true
     },
     clearCredentials(state) {
       state.user = null
-      state.tenant = null
-      state.isAuthenticated = false
       state.initialised = true
     },
   },
