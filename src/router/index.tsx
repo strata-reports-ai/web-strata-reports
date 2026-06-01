@@ -22,6 +22,7 @@ const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ defau
 const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
+const PricingPage = lazy(() => import('../pages/PricingPage').then((m) => ({ default: m.PricingPage })))
 const PrivacyPage = lazy(() => import('../pages/legal/PrivacyPage').then((m) => ({ default: m.PrivacyPage })))
 const TermsPage = lazy(() => import('../pages/legal/TermsPage').then((m) => ({ default: m.TermsPage })))
 const HelpIndexPage = lazy(() => import('../pages/help/HelpIndexPage').then((m) => ({ default: m.HelpIndexPage })))
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/dashboard" replace />,
+  },
+  {
+    path: '/pricing',
+    element: <Lazy><PricingPage /></Lazy>,
   },
   {
     path: '/legal',

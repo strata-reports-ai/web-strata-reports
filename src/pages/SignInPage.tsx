@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Link, Stack, TextField, Typography } from '@mui/material'
 import { useLoginMutation, authApi } from '../api/authApi'
 import { propertiesApi } from '../api/propertiesApi'
 import { setCredentials } from '../store/authSlice'
@@ -90,6 +90,12 @@ export function SignInPage() {
           <Button type="submit" variant="contained" disabled={isLoading} fullWidth>
             {isLoading ? <CircularProgress size={24} /> : 'Sign in'}
           </Button>
+          <Typography variant="body2" align="center" color="text.secondary">
+            New here?{' '}
+            <Link component={RouterLink} to="/pricing" underline="hover">
+              See pricing
+            </Link>
+          </Typography>
         </Stack>
         </Box>
       </Box>
