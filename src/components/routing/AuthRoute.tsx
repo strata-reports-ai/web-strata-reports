@@ -4,7 +4,8 @@ import { RootState } from '../../store/store'
 import { Box, CircularProgress } from '@mui/material'
 
 export function AuthRoute() {
-  const { isAuthenticated, initialised } = useSelector((state: RootState) => state.auth)
+  const { user, initialised } = useSelector((state: RootState) => state.auth)
+  const isAuthenticated = user !== null
 
   if (!initialised) {
     return (
