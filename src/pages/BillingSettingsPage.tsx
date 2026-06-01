@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link as RouterLink, useSearchParams } from 'react-router-dom'
 import {
   Alert,
   Box,
@@ -9,6 +9,7 @@ import {
   Chip,
   CircularProgress,
   LinearProgress,
+  Link,
   Snackbar,
   Stack,
   Typography,
@@ -22,6 +23,7 @@ import {
   type BillingStatus,
 } from '../api/billingApi'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
+import { getPlanById, OVERAGE_RATE_PER_REPORT } from '../config/plans'
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '—'
@@ -139,7 +141,8 @@ export function BillingSettingsPage() {
     )
   }
 
-  const planLabel = data.plan ? data.plan.charAt(0).toUpperCase() + data.plan.slice(1) : '—'
+  const planConfig = data.plan ? getPlanById(data.plan) : undefined
+  const planLabel = planConfig?.name ?? (data.plan ? data.plan.charAt(0).toUpperCase() + data.plan.slice(1) : '—')
 
   return (
     <Box sx={{ maxWidth: 720, mx: 'auto', overflowX: 'hidden' }}>
@@ -189,6 +192,18 @@ export function BillingSettingsPage() {
               limit={data.reportsQuota}
             />
           </Stack>
+
+          {planConfig && !planConfig.unlimitedReports && (
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
+              Overage rate: ${OVERAGE_RATE_PER_REPORT}/report beyond your quarterly quota.
+            </Typography>
+          )}
+
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            <Link component={RouterLink} to="/pricing" underline="hover">
+              Compare all plans
+            </Link>
+          </Typography>
         </CardContent>
       </Card>
 

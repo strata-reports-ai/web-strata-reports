@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts"
+    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts src/config/plans.test.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
