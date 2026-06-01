@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Box,
@@ -14,6 +15,8 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import SettingsIcon from '@mui/icons-material/Settings'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { HelpMenu } from '../help/HelpMenu'
 
 const SIDEBAR_WIDTH = 220
 
@@ -34,11 +37,15 @@ interface SidebarProps {
 export function Sidebar({ variant, open, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const helpButtonRef = useRef<HTMLDivElement | null>(null)
+  const [helpOpen, setHelpOpen] = useState(false)
 
   const isSelected = (path: string) => {
     if (path === '/settings/profile') return pathname.startsWith('/settings')
     return pathname === path || pathname.startsWith(path + '/')
   }
+
+  const reportsIndex = NAV_ITEMS.findIndex((item) => item.path === '/reports')
 
   const drawerContent = (
     <Box sx={{ width: SIDEBAR_WIDTH, overflowX: 'hidden' }}>
@@ -48,20 +55,41 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
         </Typography>
       </Toolbar>
       <List>
-        {NAV_ITEMS.map((item) => (
-          <ListItemButton
-            key={item.path}
-            selected={isSelected(item.path)}
-            onClick={() => {
-              navigate(item.path)
-              if (variant === 'temporary') onClose()
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItemButton>
+        {NAV_ITEMS.map((item, index) => (
+          <Box key={item.path}>
+            <ListItemButton
+              selected={isSelected(item.path)}
+              onClick={() => {
+                navigate(item.path)
+                if (variant === 'temporary') onClose()
+              }}
+              sx={{ minHeight: 44 }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+            {index === reportsIndex && (
+              <Box ref={helpButtonRef}>
+                <ListItemButton
+                  onClick={() => setHelpOpen(true)}
+                  sx={{ minHeight: 44 }}
+                  aria-label="Open help menu"
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <HelpOutlineIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Help" />
+                </ListItemButton>
+              </Box>
+            )}
+          </Box>
         ))}
       </List>
+      <HelpMenu
+        open={helpOpen}
+        anchorEl={helpButtonRef.current}
+        onClose={() => setHelpOpen(false)}
+      />
     </Box>
   )
 
