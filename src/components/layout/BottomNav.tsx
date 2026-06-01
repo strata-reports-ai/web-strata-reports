@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
 import DashboardIcon from '@mui/icons-material/Dashboard'
@@ -5,6 +6,8 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import SettingsIcon from '@mui/icons-material/Settings'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { HelpMenu } from '../help/HelpMenu'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -14,9 +17,12 @@ const NAV_ITEMS = [
   { label: 'Settings', icon: <SettingsIcon />, path: '/settings/profile' },
 ]
 
+const HELP_INDEX = NAV_ITEMS.length
+
 export function BottomNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const [helpOpen, setHelpOpen] = useState(false)
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
     pathname === item.path || pathname.startsWith(item.path + '/') ||
@@ -30,7 +36,13 @@ export function BottomNav() {
     >
       <BottomNavigation
         value={activeIndex === -1 ? false : activeIndex}
-        onChange={(_event, index: number) => navigate(NAV_ITEMS[index].path)}
+        onChange={(_event, index: number) => {
+          if (index === HELP_INDEX) {
+            setHelpOpen(true)
+            return
+          }
+          navigate(NAV_ITEMS[index].path)
+        }}
         sx={{ width: '100%' }}
       >
         {NAV_ITEMS.map((item) => (
@@ -41,7 +53,14 @@ export function BottomNav() {
             sx={{ minWidth: 0, px: 0.5, '& .MuiBottomNavigationAction-label': { fontSize: '0.65rem' } }}
           />
         ))}
+        <BottomNavigationAction
+          key="help"
+          label="Help"
+          icon={<HelpOutlineIcon />}
+          sx={{ minWidth: 0, px: 0.5, '& .MuiBottomNavigationAction-label': { fontSize: '0.65rem' } }}
+        />
       </BottomNavigation>
+      <HelpMenu open={helpOpen} anchorEl={null} onClose={() => setHelpOpen(false)} />
     </Paper>
   )
 }
