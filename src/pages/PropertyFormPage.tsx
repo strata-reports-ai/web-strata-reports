@@ -73,7 +73,11 @@ export function PropertyFormPage() {
     return (
       <Box>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
-          <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/properties')}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate('/properties')}
+            sx={{ minHeight: 44 }}
+          >
             Back
           </Button>
         </Stack>
@@ -84,16 +88,28 @@ export function PropertyFormPage() {
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/properties')}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        sx={{ mb: 3, flexWrap: 'wrap' }}
+        useFlexGap
+      >
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate('/properties')}
+          sx={{ minHeight: 44 }}
+        >
           Back
         </Button>
-        <Typography variant="h5">{isEdit ? 'Edit Property' : 'Add Property'}</Typography>
+        <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
+          {isEdit ? 'Edit Property' : 'Add Property'}
+        </Typography>
       </Stack>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 480 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 480, width: '100%' }}>
         <Stack spacing={2}>
           <TextField
             label="Name"

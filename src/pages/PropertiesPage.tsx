@@ -111,8 +111,23 @@ function PropertyCard({ property, onEdit, onDelete }: PropertyCardProps) {
         <Typography variant="body2">Last Import: {formatDate(property.lastImportDate)}</Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" startIcon={<EditIcon />} onClick={() => onEdit(property.id)}>Edit</Button>
-        <Button size="small" color="error" startIcon={<DeleteIcon />} onClick={() => onDelete(property)}>Delete</Button>
+        <Button
+          size="small"
+          startIcon={<EditIcon />}
+          onClick={() => onEdit(property.id)}
+          sx={{ minHeight: 44 }}
+        >
+          Edit
+        </Button>
+        <Button
+          size="small"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={() => onDelete(property)}
+          sx={{ minHeight: 44 }}
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   )
@@ -213,9 +228,15 @@ export function PropertiesPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={1}
+        sx={{ mb: 2 }}
+      >
         <Typography variant="h5">Properties</Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} useFlexGap flexWrap="wrap">
           <Tooltip title={reportCreateDisabled ? 'Upgrade your plan' : ''}>
             <span>
               <Button
@@ -224,6 +245,7 @@ export function PropertiesPage() {
                 onClick={() => navigate('/reports/new')}
                 size="medium"
                 disabled={reportCreateDisabled}
+                sx={{ minHeight: 44, width: { xs: '100%', sm: 'auto' } }}
               >
                 Generate Report
               </Button>
@@ -237,13 +259,14 @@ export function PropertiesPage() {
                 onClick={() => navigate('/properties/new')}
                 size="medium"
                 disabled={propertyCreateDisabled}
+                sx={{ minHeight: 44, width: { xs: '100%', sm: 'auto' } }}
               >
                 Add Property
               </Button>
             </span>
           </Tooltip>
         </Stack>
-      </Box>
+      </Stack>
 
       {(isBlocked || propertiesAtLimit || reportsAtLimit) && blockReason && (
         <Alert severity="warning" sx={{ mb: 2 }}>
@@ -254,15 +277,15 @@ export function PropertiesPage() {
         </Alert>
       )}
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }} useFlexGap flexWrap="wrap">
         <TextField
           label="Search"
           value={searchInput}
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="Name, address, or owner…"
-          sx={{ minWidth: 200 }}
+          sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 200 } }}
         />
-        <FormControl size="small" sx={{ minWidth: 140 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 140 } }}>
           <InputLabel>City</InputLabel>
           <Select value={city} label="City" onChange={(e) => handleCityChange(e.target.value)}>
             <MenuItem value="">All cities</MenuItem>
@@ -271,7 +294,7 @@ export function PropertiesPage() {
             ))}
           </Select>
         </FormControl>
-        <FormControl size="small" sx={{ minWidth: 160 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 160 } }}>
           <InputLabel>Owner</InputLabel>
           <Select value={ownerName} label="Owner" onChange={(e) => handleOwnerChange(e.target.value)}>
             <MenuItem value="">All owners</MenuItem>

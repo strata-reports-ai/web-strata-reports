@@ -148,7 +148,11 @@ function ReportCard({ report, onViewPdf, onRegenerate, onDelete, regenerating, d
       <CardActions>
         {report.status === 'succeeded' && (
           <Tooltip title="View PDF">
-            <IconButton size="small" onClick={() => onViewPdf(report.id)} aria-label="view pdf">
+            <IconButton
+              onClick={() => onViewPdf(report.id)}
+              aria-label="view pdf"
+              sx={{ minWidth: 44, minHeight: 44 }}
+            >
               <PictureAsPdfIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -156,10 +160,10 @@ function ReportCard({ report, onViewPdf, onRegenerate, onDelete, regenerating, d
         <Tooltip title={isActive ? 'Already running' : 'Regenerate'}>
           <span>
             <IconButton
-              size="small"
               onClick={() => onRegenerate(report)}
               disabled={isActive || regenerating || deleting}
               aria-label="regenerate"
+              sx={{ minWidth: 44, minHeight: 44 }}
             >
               <ReplayIcon fontSize="small" />
             </IconButton>
@@ -168,11 +172,11 @@ function ReportCard({ report, onViewPdf, onRegenerate, onDelete, regenerating, d
         <Tooltip title="Delete">
           <span>
             <IconButton
-              size="small"
               color="error"
               onClick={() => onDelete(report)}
               disabled={deleting || regenerating}
               aria-label="delete"
+              sx={{ minWidth: 44, minHeight: 44 }}
             >
               <DeleteIcon fontSize="small" />
             </IconButton>
@@ -383,9 +387,19 @@ export function ReportsListPage() {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        spacing={1}
+        sx={{ mb: 2 }}
+      >
         <Typography variant="h5">Reports</Typography>
-        <Button variant="contained" onClick={() => navigate('/reports/new')}>
+        <Button
+          variant="contained"
+          onClick={() => navigate('/reports/new')}
+          sx={{ minHeight: 44, width: { xs: '100%', sm: 'auto' } }}
+        >
           Generate Report
         </Button>
       </Stack>
@@ -396,7 +410,7 @@ export function ReportsListPage() {
         sx={{ mb: 2, flexWrap: 'wrap' }}
         useFlexGap
       >
-        <FormControl size="small" sx={{ minWidth: 180 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 180 } }}>
           <InputLabel>Property</InputLabel>
           <Select
             value={propertyId}
@@ -410,7 +424,7 @@ export function ReportsListPage() {
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 180 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 180 } }}>
           <InputLabel>Status</InputLabel>
           <Select
             multiple
@@ -435,7 +449,7 @@ export function ReportsListPage() {
           value={fromParam}
           onChange={handleFromChange}
           InputLabelProps={{ shrink: true }}
-          sx={{ minWidth: 150 }}
+          sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 150 } }}
         />
 
         <TextField
@@ -445,7 +459,7 @@ export function ReportsListPage() {
           value={toParam}
           onChange={handleToChange}
           InputLabelProps={{ shrink: true }}
-          sx={{ minWidth: 150 }}
+          sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 150 } }}
         />
       </Stack>
 
