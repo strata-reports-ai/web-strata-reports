@@ -1,0 +1,21 @@
+name: Summary CI
+on:
+  repository_dispatch:
+    types: [summary]
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+jobs:
+  release:
+    name: Generate README summary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate README summary
+        uses: upptime/uptime-monitor@v1
+        with:
+          command: "readme"
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          POSTMARK_SMTP_TOKEN: ${{ secrets.POSTMARK_SMTP_TOKEN }}
+          CONFIG_PATH: status/.upptimerc.yml

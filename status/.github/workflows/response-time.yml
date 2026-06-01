@@ -1,0 +1,21 @@
+name: Response Time CI
+on:
+  repository_dispatch:
+    types: [response_time]
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+jobs:
+  release:
+    name: Check status of all sites
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check status of all sites
+        uses: upptime/uptime-monitor@v1
+        with:
+          command: "response-time"
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          POSTMARK_SMTP_TOKEN: ${{ secrets.POSTMARK_SMTP_TOKEN }}
+          CONFIG_PATH: status/.upptimerc.yml
