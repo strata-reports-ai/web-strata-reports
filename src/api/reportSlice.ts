@@ -14,6 +14,10 @@ export interface Report {
   pdfUrl: string | null
   createdAt: string
   updatedAt: string
+  generatedBy: string | null
+  aiModel: string | null
+  generationTimeMs: number | null
+  aiCostUsd: number | null
 }
 
 export interface GenerateReportRequest {
@@ -37,6 +41,15 @@ export interface PreflightParams {
   propertyId: string
   periodStart: string
   periodEnd: string
+}
+
+export interface ListReportsParams {
+  propertyId?: string
+  status?: ReportStatus[]
+  from?: string
+  to?: string
+  cursor?: string
+  pageSize?: number
 }
 
 export interface ListReportsResponse {
@@ -68,9 +81,35 @@ export const reportApi = baseApi.injectEndpoints({
       providesTags: (_result, _err, id) => [{ type: 'Report', id }],
     }),
 
-    listReports: builder.query<ListReportsResponse, void>({
-      query: () => 'reports',
-      providesTags: [{ type: 'Report', id: 'LIST' }],
+    listReports: builder.query<ListReportsResponse, ListReportsParams>({
+      query: (params) => {
+        const p: Record<string, string> = {}
+        if (params.propertyId) p.propertyId = params.propertyId
+        if (params.status && params.status.length > 0) p.status = params.status.join(',')
+        if (params.from) p.from = params.from
+        if (params.to) p.to = params.to
+        if (params.cursor) p.cursor = params.cursor
+        p.pageSize = String(params.pageSize ?? 25)
+        return { url: 'reports', params: p }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.items.map(({ id }) => ({ type: 'Report' as const, id })),
+              { type: 'Report', id: 'LIST' },
+            ]
+          : [{ type: 'Report', id: 'LIST' }],
+    }),
+
+    deleteReport: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `reports/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (_result, _err, id) => [
+        { type: 'Report', id },
+        { type: 'Report', id: 'LIST' },
+      ],
     }),
   }),
 })
@@ -80,5 +119,7 @@ export const {
   useLazyGetPreflightQuery,
   useGenerateReportMutation,
   useGetReportQuery,
+  useLazyGetReportQuery,
   useListReportsQuery,
+  useDeleteReportMutation,
 } = reportApi

@@ -1,46 +1,87 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { Box, CircularProgress } from '@mui/material'
 import { App } from '../App'
-import { DashboardPage } from '../pages/DashboardPage'
-import { PropertiesPage } from '../pages/PropertiesPage'
-import { PropertyFormPage } from '../pages/PropertyFormPage'
-import { ImportsPage } from '../pages/ImportsPage'
-import { ReportsPage } from '../pages/ReportsPage'
-import { GenerateReportPage } from '../pages/GenerateReportPage'
-import { SignInPage } from '../pages/SignInPage'
-import { WelcomePage } from '../pages/WelcomePage'
-import { BillingSettingsPage } from '../pages/BillingSettingsPage'
-import { AddPropertyStep } from '../pages/onboarding/AddPropertyStep'
-import { UploadDataStep } from '../pages/onboarding/UploadDataStep'
 import { ProtectedRoute } from '../components/routing/ProtectedRoute'
+import { AuthRoute } from '../components/routing/AuthRoute'
+
+const DashboardPage = lazy(() => import('../pages/DashboardPage').then((m) => ({ default: m.DashboardPage })))
+const PropertiesPage = lazy(() => import('../pages/PropertiesPage').then((m) => ({ default: m.PropertiesPage })))
+const PropertyFormPage = lazy(() => import('../pages/PropertyFormPage').then((m) => ({ default: m.PropertyFormPage })))
+const PropertyDetailPage = lazy(() => import('../pages/PropertyDetailPage').then((m) => ({ default: m.PropertyDetailPage })))
+const ImportsPage = lazy(() => import('../pages/ImportsPage').then((m) => ({ default: m.ImportsPage })))
+const ReportsListPage = lazy(() => import('../pages/ReportsListPage').then((m) => ({ default: m.ReportsListPage })))
+const GenerateReportPage = lazy(() => import('../pages/GenerateReportPage').then((m) => ({ default: m.GenerateReportPage })))
+const ReportDetailPage = lazy(() => import('../pages/ReportDetailPage').then((m) => ({ default: m.ReportDetailPage })))
+const SettingsProfilePage = lazy(() => import('../pages/SettingsProfilePage').then((m) => ({ default: m.SettingsProfilePage })))
+const SettingsTenantPage = lazy(() => import('../pages/SettingsTenantPage').then((m) => ({ default: m.SettingsTenantPage })))
+const BillingSettingsPage = lazy(() => import('../pages/BillingSettingsPage').then((m) => ({ default: m.BillingSettingsPage })))
+const OnboardingWelcomePage = lazy(() => import('../pages/OnboardingWelcomePage').then((m) => ({ default: m.OnboardingWelcomePage })))
+const WelcomePage = lazy(() => import('../pages/WelcomePage').then((m) => ({ default: m.WelcomePage })))
+const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ default: m.SignInPage })))
+const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
+const AddPropertyStep = lazy(() => import('../pages/onboarding/AddPropertyStep').then((m) => ({ default: m.AddPropertyStep })))
+const UploadDataStep = lazy(() => import('../pages/onboarding/UploadDataStep').then((m) => ({ default: m.UploadDataStep })))
+
+function PageLoader() {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+      <CircularProgress />
+    </Box>
+  )
+}
+
+function Lazy({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>
+}
 
 export const router = createBrowserRouter([
   {
-    path: '/auth/signin',
-    element: <SignInPage />,
+    path: '/',
+    element: <Navigate to="/dashboard" replace />,
   },
   {
-    path: '/onboarding',
-    element: <ProtectedRoute />,
+    path: '/auth',
+    element: <AuthRoute />,
     children: [
-      { path: 'welcome', element: <WelcomePage /> },
-      { path: 'add-property', element: <AddPropertyStep /> },
-      { path: 'upload-data', element: <UploadDataStep /> },
-      { path: 'generate-report', element: <GenerateReportPage /> },
+      { path: 'signin', element: <Lazy><SignInPage /></Lazy> },
+      { path: 'signup', element: <Lazy><SignUpPage /></Lazy> },
+      { path: 'forgot-password', element: <Lazy><ForgotPasswordPage /></Lazy> },
+      { path: 'reset-password', element: <Lazy><ResetPasswordPage /></Lazy> },
     ],
   },
   {
-    path: '/',
-    element: <App />,
+    element: <ProtectedRoute />,
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'dashboard', element: <DashboardPage /> },
-      { path: 'properties', element: <PropertiesPage /> },
-      { path: 'properties/new', element: <PropertyFormPage /> },
-      { path: 'properties/:id/edit', element: <PropertyFormPage /> },
-      { path: 'imports', element: <ImportsPage /> },
-      { path: 'reports', element: <ReportsPage /> },
-      { path: 'reports/new', element: <GenerateReportPage /> },
-      { path: 'settings/billing', element: <BillingSettingsPage /> },
+      {
+        path: '/onboarding',
+        children: [
+          { path: 'welcome', element: <Lazy><WelcomePage /></Lazy> },
+          { path: 'onboarding-welcome', element: <Lazy><OnboardingWelcomePage /></Lazy> },
+          { path: 'add-property', element: <Lazy><AddPropertyStep /></Lazy> },
+          { path: 'upload-data', element: <Lazy><UploadDataStep /></Lazy> },
+          { path: 'generate-report', element: <Lazy><GenerateReportPage /></Lazy> },
+        ],
+      },
+      {
+        element: <App />,
+        children: [
+          { path: '/dashboard', element: <Lazy><DashboardPage /></Lazy> },
+          { path: '/properties', element: <Lazy><PropertiesPage /></Lazy> },
+          { path: '/properties/new', element: <Lazy><PropertyFormPage /></Lazy> },
+          { path: '/properties/:id', element: <Lazy><PropertyDetailPage /></Lazy> },
+          { path: '/properties/:id/edit', element: <Lazy><PropertyFormPage /></Lazy> },
+          { path: '/imports', element: <Lazy><ImportsPage /></Lazy> },
+          { path: '/reports', element: <Lazy><ReportsListPage /></Lazy> },
+          { path: '/reports/new', element: <Lazy><GenerateReportPage /></Lazy> },
+          { path: '/reports/:id', element: <Lazy><ReportDetailPage /></Lazy> },
+          { path: '/settings/profile', element: <Lazy><SettingsProfilePage /></Lazy> },
+          { path: '/settings/tenant', element: <Lazy><SettingsTenantPage /></Lazy> },
+          { path: '/settings/billing', element: <Lazy><BillingSettingsPage /></Lazy> },
+        ],
+      },
     ],
   },
 ])
