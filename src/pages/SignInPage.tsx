@@ -7,6 +7,7 @@ import { propertiesApi } from '../api/propertiesApi'
 import { setCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
+import { LegalFooter } from '../components/layout/LegalFooter'
 
 export function SignInPage() {
   const navigate = useNavigate()
@@ -43,16 +44,17 @@ export function SignInPage() {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        p: 2,
-      }}
-    >
-      <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden' }}>
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2,
+        }}
+      >
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
         <Typography variant="h5" fontWeight={700} mb={3}>
           Sign in to StrataReport AI
         </Typography>
@@ -89,7 +91,9 @@ export function SignInPage() {
             {isLoading ? <CircularProgress size={24} /> : 'Sign in'}
           </Button>
         </Stack>
+        </Box>
       </Box>
+      <LegalFooter />
     </Box>
   )
 }
