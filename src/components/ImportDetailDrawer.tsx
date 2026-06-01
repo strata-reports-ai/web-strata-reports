@@ -9,10 +9,18 @@ import {
   ListItemText,
   IconButton,
   Chip,
+  Tooltip,
+  Link,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import DownloadIcon from '@mui/icons-material/Download'
 import { useGetImportQuery } from '../api/importSlice'
 import type { ImportRow, ImportStatus } from '../api/importSlice'
+import {
+  findColumnSynonymEntry,
+  templatePathForImportType,
+} from '../features/imports/columnSynonyms'
 
 const STATUS_COLOR: Record<ImportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   pending: 'default',
@@ -62,15 +70,89 @@ export function ImportDetailDrawer({ importRow, onClose }: Props) {
           </Box>
         )}
 
-        {detail && !isFetching && (
+        {detail && !isFetching && (() => {
+          const showColumnHelp =
+            (detail.status === 'failed' || detail.status === 'partial') &&
+            !!detail.errorSummary
+          const synonymEntry = showColumnHelp
+            ? findColumnSynonymEntry(detail.importType, detail.errorSummary)
+            : null
+          // TODO: confirm `/templates/{importType}.csv` static assets are
+          // shipped (Story 3.2). If not yet present, this link will 404.
+          const templateHref = synonymEntry
+            ? templatePathForImportType(detail.importType)
+            : '#'
+
+          return (
           <>
             <Box>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                 Error Summary
               </Typography>
-              <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                {detail.errorSummary ?? '—'}
-              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', flex: 1, minWidth: 0 }}
+                >
+                  {detail.errorSummary ?? '—'}
+                </Typography>
+                {synonymEntry && (
+                  <Tooltip
+                    arrow
+                    enterTouchDelay={0}
+                    leaveTouchDelay={6000}
+                    title={
+                      <Box sx={{ p: 0.5 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          {synonymEntry.label}
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+                          Accepted column names:
+                        </Typography>
+                        <Box component="ul" sx={{ pl: 2, m: 0 }}>
+                          {synonymEntry.synonyms.map((s) => (
+                            <li key={s}>
+                              <Typography variant="caption">{s}</Typography>
+                            </li>
+                          ))}
+                        </Box>
+                      </Box>
+                    }
+                  >
+                    <IconButton
+                      size="small"
+                      aria-label={`Help for ${synonymEntry.label} column`}
+                      sx={{
+                        minWidth: 44,
+                        minHeight: 44,
+                        color: 'info.main',
+                      }}
+                    >
+                      <InfoOutlinedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
+              {synonymEntry && (
+                <Box sx={{ mt: 1 }}>
+                  <Link
+                    href={templateHref}
+                    download
+                    underline="hover"
+                    sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, fontSize: 14 }}
+                  >
+                    <DownloadIcon fontSize="small" />
+                    Download template CSV
+                  </Link>
+                </Box>
+              )}
             </Box>
 
             <Divider />
@@ -130,7 +212,8 @@ export function ImportDetailDrawer({ importRow, onClose }: Props) {
               </>
             )}
           </>
-        )}
+          )
+        })()}
       </Box>
     </Drawer>
   )
