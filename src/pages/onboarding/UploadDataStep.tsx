@@ -71,9 +71,10 @@ export function UploadDataStep() {
     setError(null)
     setUploading(true)
     try {
+      const apiImportType = importType.toLowerCase() as ImportType
       const { uploadUrl, blobPath } = await getUploadUrl({
         fileName: file.name,
-        importType,
+        importType: apiImportType,
         propertyId: firstProperty.id,
       }).unwrap()
       const putResp = await fetch(uploadUrl, {
@@ -84,7 +85,7 @@ export function UploadDataStep() {
       if (!putResp.ok) throw new Error('Upload failed')
       await createImport({
         fileName: file.name,
-        importType,
+        importType: apiImportType,
         propertyId: firstProperty.id,
         blobPath,
       }).unwrap()
