@@ -47,7 +47,7 @@ export function AddPropertyStep() {
         address: address.trim(),
         city: cityValue.trim(),
         ownerName: ownerName.trim(),
-        units: units ? Number(units) : 0,
+        ...(units ? { units: Number(units) } : {}),
       }).unwrap()
       navigate('/onboarding/upload-data')
     } catch {
