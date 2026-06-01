@@ -22,7 +22,7 @@ import { OnboardingStepper } from '../../components/onboarding/OnboardingStepper
 import { useSeedSampleDataMutation } from '../../api/onboardingApi'
 import {
   useGetUploadUrlMutation,
-  useCreateImportMutation,
+  useConfirmImportMutation,
   type ImportType,
 } from '../../api/importSlice'
 import { useGetPropertiesQuery } from '../../api/propertiesApi'
@@ -42,7 +42,7 @@ export function UploadDataStep() {
 
   const [seedSampleData, { isLoading: isSeeding }] = useSeedSampleDataMutation()
   const [getUploadUrl] = useGetUploadUrlMutation()
-  const [createImport] = useCreateImportMutation()
+  const [confirmImport] = useConfirmImportMutation()
 
   const [importType, setImportType] = useState<ImportType>('Revenue')
   const [dragOver, setDragOver] = useState(false)
@@ -71,7 +71,7 @@ export function UploadDataStep() {
     setError(null)
     setUploading(true)
     try {
-      const { uploadUrl, blobPath } = await getUploadUrl({
+      const { uploadUrl, importId } = await getUploadUrl({
         fileName: file.name,
         importType,
         propertyId: firstProperty.id,
@@ -82,12 +82,7 @@ export function UploadDataStep() {
         body: file,
       })
       if (!putResp.ok) throw new Error('Upload failed')
-      await createImport({
-        fileName: file.name,
-        importType,
-        propertyId: firstProperty.id,
-        blobPath,
-      }).unwrap()
+      await confirmImport(importId).unwrap()
       navigate('/onboarding/generate-report')
     } catch {
       setError('Upload failed. Please try again.')

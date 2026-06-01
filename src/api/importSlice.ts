@@ -69,7 +69,7 @@ export const importApi = baseApi.injectEndpoints({
     }),
 
     getUploadUrl: builder.mutation<
-      { uploadUrl: string; blobPath: string },
+      { uploadUrl: string; blobPath: string; importId: string },
       { fileName: string; importType: ImportType; propertyId: string }
     >({
       query: (body) => ({
@@ -79,14 +79,10 @@ export const importApi = baseApi.injectEndpoints({
       }),
     }),
 
-    createImport: builder.mutation<
-      { id: string },
-      { fileName: string; importType: ImportType; propertyId: string; blobPath: string }
-    >({
-      query: (body) => ({
-        url: '/imports',
+    confirmImport: builder.mutation<{ id: string }, string>({
+      query: (importId) => ({
+        url: `/imports/${importId}/confirm`,
         method: 'POST',
-        body,
       }),
       invalidatesTags: [{ type: 'Import', id: 'LIST' }],
     }),
@@ -99,5 +95,5 @@ export const {
   useReprocessImportMutation,
   useLazyGetDownloadUrlQuery,
   useGetUploadUrlMutation,
-  useCreateImportMutation,
+  useConfirmImportMutation,
 } = importApi
