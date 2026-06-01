@@ -41,6 +41,8 @@ import ArticleIcon from '@mui/icons-material/Article'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import ReplayIcon from '@mui/icons-material/Replay'
 import DeleteIcon from '@mui/icons-material/Delete'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import TableSortLabel from '@mui/material/TableSortLabel'
 import { EmptyState } from '../components/common/EmptyState'
 import {
   useListReportsQuery,
@@ -49,9 +51,42 @@ import {
   useDeleteReportMutation,
   type Report,
   type ReportStatus,
+  type SentToOwnerChannel,
   type ListReportsParams,
 } from '../api/reportSlice'
 import { useGetPropertiesQuery } from '../api/propertiesApi'
+import { formatRelativeTime } from '../utils/formatRelativeTime'
+
+const CHANNEL_LABEL: Record<SentToOwnerChannel, string> = {
+  email: 'Email',
+  download: 'Direct download link',
+  other: 'Other',
+}
+
+interface SentChipProps {
+  report: Report
+  size?: 'small' | 'medium'
+}
+
+function SentChip({ report, size = 'small' }: SentChipProps) {
+  if (!report.sentToOwnerAt) return null
+  return (
+    <Tooltip
+      title={`Sent ${new Date(report.sentToOwnerAt).toLocaleString()}${
+        report.sentToOwnerChannel
+          ? ` via ${CHANNEL_LABEL[report.sentToOwnerChannel]}`
+          : ''
+      }`}
+    >
+      <Chip
+        icon={<CheckCircleIcon />}
+        color="success"
+        size={size}
+        label={`Sent · ${formatRelativeTime(report.sentToOwnerAt)}`}
+      />
+    </Tooltip>
+  )
+}
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -134,7 +169,12 @@ function ReportCard({ report, onViewPdf, onRegenerate, onDelete, regenerating, d
         <Typography variant="subtitle1" fontWeight={700} noWrap>
           {report.propertyName}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        {report.sentToOwnerAt && (
+          <Box sx={{ mt: 0.5 }}>
+            <SentChip report={report} />
+          </Box>
+        )}
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
           {formatPeriod(report.periodStart, report.periodEnd)}
         </Typography>
         <Box sx={{ mt: 0.5 }}>
@@ -199,6 +239,8 @@ export function ReportsListPage() {
   const toParam = searchParams.get('to') ?? ''
   const cursorParam = searchParams.get('cursor') ?? undefined
   const dirParam = searchParams.get('dir') ?? 'next'
+  const sortByParam = searchParams.get('sortBy') ?? ''
+  const sortDirParam = (searchParams.get('sortDir') ?? 'desc') as 'asc' | 'desc'
 
   const selectedStatuses: ReportStatus[] = statusParam
     ? (statusParam.split(',').filter((s) => ALL_STATUSES.includes(s as ReportStatus)) as ReportStatus[])
@@ -376,7 +418,28 @@ export function ReportsListPage() {
     setSearchParams(next)
   }
 
-  const visibleReports = (data?.items ?? []).filter((r) => !optimisticDeleted.has(r.id))
+  const visibleReports = (() => {
+    const filtered = (data?.items ?? []).filter((r) => !optimisticDeleted.has(r.id))
+    if (sortByParam !== 'sentToOwnerAt') return filtered
+    const sorted = [...filtered].sort((a, b) => {
+      const aVal = a.sentToOwnerAt ? new Date(a.sentToOwnerAt).getTime() : 0
+      const bVal = b.sentToOwnerAt ? new Date(b.sentToOwnerAt).getTime() : 0
+      return sortDirParam === 'asc' ? aVal - bVal : bVal - aVal
+    })
+    return sorted
+  })()
+
+  const handleSortBySent = () => {
+    const next = new URLSearchParams(searchParams)
+    if (sortByParam !== 'sentToOwnerAt') {
+      next.set('sortBy', 'sentToOwnerAt')
+      next.set('sortDir', 'desc')
+    } else {
+      next.set('sortBy', 'sentToOwnerAt')
+      next.set('sortDir', sortDirParam === 'asc' ? 'desc' : 'asc')
+    }
+    setSearchParams(next)
+  }
 
   const isReportActive = (r: Report) =>
     r.status === 'queued' || r.status === 'generating' || r.status === 'processing'
@@ -524,6 +587,15 @@ export function ReportsListPage() {
                   <TableCell>Period</TableCell>
                   <TableCell>Generated At</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell sortDirection={sortByParam === 'sentToOwnerAt' ? sortDirParam : false}>
+                    <TableSortLabel
+                      active={sortByParam === 'sentToOwnerAt'}
+                      direction={sortByParam === 'sentToOwnerAt' ? sortDirParam : 'desc'}
+                      onClick={handleSortBySent}
+                    >
+                      Sent
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -531,7 +603,7 @@ export function ReportsListPage() {
                 {isLoading
                   ? Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
-                        {Array.from({ length: 5 }).map((_u, j) => (
+                        {Array.from({ length: 6 }).map((_u, j) => (
                           <TableCell key={j}>
                             <Skeleton variant="text" />
                           </TableCell>
@@ -559,6 +631,15 @@ export function ReportsListPage() {
                               color={STATUS_COLOR[report.status]}
                               size="small"
                             />
+                          </TableCell>
+                          <TableCell>
+                            {report.sentToOwnerAt ? (
+                              <SentChip report={report} />
+                            ) : (
+                              <Typography variant="body2" color="text.secondary">
+                                —
+                              </Typography>
+                            )}
                           </TableCell>
                           <TableCell align="right">
                             <Stack direction="row" spacing={0.5} justifyContent="flex-end">

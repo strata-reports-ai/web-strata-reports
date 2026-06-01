@@ -16,10 +16,12 @@ import {
   Link,
   Paper,
   Skeleton,
+  Snackbar,
   Stack,
   Step,
   StepLabel,
   Stepper,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -27,13 +29,24 @@ import {
 import DownloadIcon from '@mui/icons-material/Download'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead'
 import {
   useGetReportQuery,
   useGenerateReportMutation,
   type ReportStatus,
+  type SentToOwnerChannel,
 } from '../api/reportSlice'
 import { useReportPolling } from '../hooks/useReportPolling'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
+import { MarkAsSentDialog } from '../components/MarkAsSentDialog'
+import { formatRelativeTime } from '../utils/formatRelativeTime'
+
+const CHANNEL_LABEL: Record<SentToOwnerChannel, string> = {
+  email: 'Email',
+  download: 'Direct download link',
+  other: 'Other',
+}
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -102,6 +115,9 @@ export function ReportDetailPage() {
   const [iframeError, setIframeError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [regenerateError, setRegenerateError] = useState<string | null>(null)
+  const [markSentOpen, setMarkSentOpen] = useState(false)
+  const [markSentForce, setMarkSentForce] = useState(false)
+  const [markSentSnackOpen, setMarkSentSnackOpen] = useState(false)
 
   const {
     data: report,
@@ -228,10 +244,51 @@ export function ReportDetailPage() {
       </Breadcrumbs>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1} sx={{ mb: 2 }}>
-        <Typography variant="h5">
-          {isLoading ? <Skeleton width={240} /> : breadcrumbTitle}
-        </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack spacing={0.5} sx={{ minWidth: 0, flexGrow: 1 }}>
+          <Typography variant="h5">
+            {isLoading ? <Skeleton width={240} /> : breadcrumbTitle}
+          </Typography>
+          {isMobile && report?.sentToOwnerAt && (
+            <Tooltip
+              title={`Sent ${new Date(report.sentToOwnerAt).toLocaleString()}${
+                report.sentToOwnerChannel
+                  ? ` via ${CHANNEL_LABEL[report.sentToOwnerChannel]}`
+                  : ''
+              }`}
+            >
+              <Chip
+                icon={<CheckCircleIcon />}
+                color="success"
+                size="small"
+                label={`Sent to owner · ${formatRelativeTime(report.sentToOwnerAt)}`}
+                sx={{ alignSelf: 'flex-start' }}
+              />
+            </Tooltip>
+          )}
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          flexWrap="wrap"
+          useFlexGap
+        >
+          {!isMobile && report?.sentToOwnerAt && (
+            <Tooltip
+              title={`Sent ${new Date(report.sentToOwnerAt).toLocaleString()}${
+                report.sentToOwnerChannel
+                  ? ` via ${CHANNEL_LABEL[report.sentToOwnerChannel]}`
+                  : ''
+              }`}
+            >
+              <Chip
+                icon={<CheckCircleIcon />}
+                color="success"
+                size="small"
+                label={`Sent to owner · ${formatRelativeTime(report.sentToOwnerAt)}`}
+              />
+            </Tooltip>
+          )}
           {!showPolling && effectiveStatus === 'succeeded' && (
             <Button
               variant="outlined"
@@ -242,6 +299,37 @@ export function ReportDetailPage() {
               Download PDF
             </Button>
           )}
+          {!showPolling &&
+            effectiveStatus === 'succeeded' &&
+            report &&
+            !report.sentToOwnerAt && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<MarkEmailReadIcon />}
+                onClick={() => {
+                  setMarkSentForce(false)
+                  setMarkSentOpen(true)
+                }}
+                size={isMobile ? 'small' : 'medium'}
+              >
+                Mark as sent to owner
+              </Button>
+            )}
+          {!showPolling &&
+            effectiveStatus === 'succeeded' &&
+            report?.sentToOwnerAt && (
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setMarkSentForce(true)
+                  setMarkSentOpen(true)
+                }}
+              >
+                Re-mark…
+              </Button>
+            )}
           {!showPolling && !isLoading && (
             <Button
               variant="contained"
@@ -427,6 +515,31 @@ export function ReportDetailPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {id && (
+        <MarkAsSentDialog
+          open={markSentOpen}
+          reportId={id}
+          force={markSentForce}
+          onClose={() => setMarkSentOpen(false)}
+          onSuccess={() => setMarkSentSnackOpen(true)}
+        />
+      )}
+
+      <Snackbar
+        open={markSentSnackOpen}
+        autoHideDuration={4000}
+        onClose={() => setMarkSentSnackOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setMarkSentSnackOpen(false)}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          Marked as sent
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }
