@@ -1,10 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  Alert,
   Box,
   Button,
+  CircularProgress,
   MobileStepper,
+  Snackbar,
   Step,
   StepLabel,
   Stepper,
@@ -13,6 +16,8 @@ import {
 } from '@mui/material'
 import { initOnboarding, setOnboardingStep } from '../store/onboardingSlice'
 import { AppDispatch, RootState } from '../store/store'
+import { useGetPropertiesQuery } from '../api/propertiesApi'
+import { useSeedSampleDataMutation } from '../api/onboardingApi'
 
 const STEPS = ['Add Property', 'Upload Data', 'Generate Report']
 
@@ -25,6 +30,12 @@ export function WelcomePage() {
   const tenantId = user?.id ?? 'default'
   const activeStep = useSelector((state: RootState) => state.onboarding.activeStep)
 
+  const { data: propertiesData } = useGetPropertiesQuery({ pageSize: 1 })
+  const hasExistingProperties = (propertiesData?.totalCount ?? 0) > 0
+
+  const [seedSampleData, { isLoading: isSeeding }] = useSeedSampleDataMutation()
+  const [errorToastOpen, setErrorToastOpen] = useState(false)
+
   useEffect(() => {
     dispatch(initOnboarding({ tenantId }))
   }, [dispatch, tenantId])
@@ -36,6 +47,24 @@ export function WelcomePage() {
 
   const handleSkip = () => {
     navigate('/dashboard')
+  }
+
+  const handleTrySampleData = async () => {
+    try {
+      const result = await seedSampleData().unwrap()
+      navigate(
+        `/onboarding/generate-report?propertyId=${encodeURIComponent(result.propertyId)}`,
+      )
+    } catch (err: unknown) {
+      const apiErr = err as { status?: number; data?: { propertyId?: string } }
+      if (apiErr?.status === 409 && apiErr.data?.propertyId) {
+        navigate(
+          `/onboarding/generate-report?propertyId=${encodeURIComponent(apiErr.data.propertyId)}`,
+        )
+        return
+      }
+      setErrorToastOpen(true)
+    }
   }
 
   return (
@@ -91,14 +120,45 @@ export function WelcomePage() {
         )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={handleBegin}
-            sx={{ minWidth: 200, minHeight: 48 }}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            Begin
-          </Button>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleBegin}
+              disabled={isSeeding}
+              sx={{ minWidth: 200, minHeight: 48 }}
+            >
+              Get started
+            </Button>
+            {!hasExistingProperties && (
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={handleTrySampleData}
+                disabled={isSeeding}
+                startIcon={
+                  isSeeding ? <CircularProgress size={18} color="inherit" /> : undefined
+                }
+                sx={{ minWidth: 200, minHeight: 48 }}
+              >
+                Try with sample data
+              </Button>
+            )}
+          </Box>
+          {isSeeding && (
+            <Typography variant="caption" color="text.secondary">
+              Setting up your demo property…
+            </Typography>
+          )}
           <Button
             variant="text"
             size="small"
@@ -109,6 +169,21 @@ export function WelcomePage() {
           </Button>
         </Box>
       </Box>
+
+      <Snackbar
+        open={errorToastOpen}
+        autoHideDuration={5000}
+        onClose={() => setErrorToastOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity="error"
+          onClose={() => setErrorToastOpen(false)}
+          sx={{ width: '100%' }}
+        >
+          Could not load sample data — please try again or add a property manually
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

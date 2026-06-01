@@ -8,7 +8,7 @@ export const onboardingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     seedSampleData: builder.mutation<SeedSampleDataResponse, void>({
       query: () => ({
-        url: 'onboarding/seed-sample-data',
+        url: 'onboarding/sample-data',
         method: 'POST',
       }),
       invalidatesTags: ['Properties', 'Import', 'Report'],
