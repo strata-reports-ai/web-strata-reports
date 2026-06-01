@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   Box,
   Button,
+  MobileStepper,
   Step,
   StepLabel,
   Stepper,
@@ -59,18 +60,35 @@ export function WelcomePage() {
           Follow these three steps to set up your first strata report.
         </Typography>
 
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel={!isNarrow}
-          orientation={isNarrow ? 'vertical' : 'horizontal'}
-          sx={{ mb: 5 }}
-        >
-          {STEPS.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+        {isNarrow ? (
+          <Box sx={{ mb: 5 }}>
+            <MobileStepper
+              variant="dots"
+              steps={STEPS.length}
+              position="static"
+              activeStep={activeStep}
+              nextButton={null}
+              backButton={null}
+              sx={{ bgcolor: 'transparent', justifyContent: 'center', px: 0 }}
+            />
+            <Typography
+              variant="caption"
+              align="center"
+              display="block"
+              sx={{ mt: 1, color: 'text.secondary' }}
+            >
+              Step {activeStep + 1} of {STEPS.length}: {STEPS[activeStep]}
+            </Typography>
+          </Box>
+        ) : (
+          <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 5 }}>
+            {STEPS.map((label, index) => (
+              <Step key={label} completed={index < activeStep}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
           <Button
