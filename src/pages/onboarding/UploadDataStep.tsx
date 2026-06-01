@@ -71,9 +71,10 @@ export function UploadDataStep() {
     setError(null)
     setUploading(true)
     try {
+      const apiImportType = importType.toLowerCase() as ImportType
       const { uploadUrl, importId } = await getUploadUrl({
         fileName: file.name,
-        importType,
+        importType: apiImportType,
         propertyId: firstProperty.id,
       }).unwrap()
       const putResp = await fetch(uploadUrl, {

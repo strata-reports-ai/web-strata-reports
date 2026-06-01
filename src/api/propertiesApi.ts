@@ -38,7 +38,7 @@ export interface CreatePropertyRequest {
   address: string
   city: string
   ownerName: string
-  units: number
+  units?: number
 }
 
 export interface UpdatePropertyRequest {
