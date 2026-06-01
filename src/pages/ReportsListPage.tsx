@@ -41,6 +41,7 @@ import ArticleIcon from '@mui/icons-material/Article'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import ReplayIcon from '@mui/icons-material/Replay'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { EmptyState } from '../components/common/EmptyState'
 import {
   useListReportsQuery,
   useLazyGetReportQuery,
@@ -225,6 +226,10 @@ export function ReportsListPage() {
   const [snackMessage, setSnackMessage] = useState<string | null>(null)
 
   const properties = propertiesData?.items ?? []
+  const totalPropertyCount = propertiesData?.totalCount ?? properties.length
+  const hasNoProperties = !!propertiesData && totalPropertyCount === 0
+  const hasActiveFilters =
+    !!propertyId || selectedStatuses.length > 0 || !!fromParam || !!toParam
 
   const updateFilter = useCallback(
     (updates: Record<string, string>) => {
@@ -450,28 +455,24 @@ export function ReportsListPage() {
         </Alert>
       )}
 
-      {!isLoading && !isError && visibleReports.length === 0 && !hasCursor && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 8,
-            gap: 2,
-          }}
-        >
-          <ArticleIcon sx={{ fontSize: 64, color: 'text.disabled' }} />
-          <Typography variant="h6" color="text.secondary">
-            No reports yet
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Generate your first report to get started.
-          </Typography>
-          <Button variant="contained" onClick={() => navigate('/reports/new')}>
-            Generate your first report
-          </Button>
-        </Box>
+      {!isLoading && !isError && visibleReports.length === 0 && !hasCursor && !hasActiveFilters && (
+        hasNoProperties ? (
+          <EmptyState
+            icon={<ArticleIcon sx={{ fontSize: 56 }} />}
+            title="No reports yet"
+            description="You need at least one property before you can generate a report."
+            ctaLabel="Add a property first"
+            ctaHref="/properties/new"
+          />
+        ) : (
+          <EmptyState
+            icon={<ArticleIcon sx={{ fontSize: 56 }} />}
+            title="No reports yet"
+            description="Generate your first quarterly report from your imported property data."
+            ctaLabel="Generate your first report"
+            ctaHref="/reports/new"
+          />
+        )
       )}
 
       {isMobile ? (
