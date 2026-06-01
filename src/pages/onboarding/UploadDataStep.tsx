@@ -56,8 +56,15 @@ export function UploadDataStep() {
       navigate(
         `/onboarding/generate-report?propertyId=${encodeURIComponent(result.propertyId)}`,
       )
-    } catch {
-      setError('Failed to load sample data. Please try again.')
+    } catch (err) {
+      const apiErr = err as { status?: number; data?: { propertyId?: string } }
+      if (apiErr?.status === 409 && apiErr.data?.propertyId) {
+        navigate(
+          `/onboarding/generate-report?propertyId=${encodeURIComponent(apiErr.data.propertyId)}`,
+        )
+        return
+      }
+      setError('Could not load sample data — please try again or add a property manually.')
     }
   }
 
