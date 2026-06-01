@@ -19,6 +19,7 @@ import {
   MenuItem,
   Pagination,
   Select,
+  Skeleton,
   Stack,
   Table,
   TableBody,
@@ -37,6 +38,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import AddchartIcon from '@mui/icons-material/Addchart'
+import { EmptyState } from '../components/common/EmptyState'
 import {
   useGetPropertiesQuery,
   useGetPropertyFilterOptionsQuery,
@@ -280,23 +282,58 @@ export function PropertiesPage() {
         </FormControl>
       </Stack>
 
-      {loading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress />
+      {loading && isMobile && (
+        <Box>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} variant="outlined" sx={{ mb: 1.5 }}>
+              <CardContent>
+                <Skeleton variant="text" width="60%" />
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="50%" />
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      )}
+
+      {loading && !isMobile && (
+        <Box sx={{ overflowX: 'auto' }}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>{sortLabel('name', 'Name')}</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell>Owner</TableCell>
+                <TableCell align="right">Units</TableCell>
+                <TableCell>{sortLabel('last_report_date', 'Last Report')}</TableCell>
+                <TableCell>{sortLabel('last_import_date', 'Last Import')}</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 7 }).map((_u, j) => (
+                    <TableCell key={j}>
+                      <Skeleton variant="text" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Box>
       )}
 
       {!loading && items.length === 0 && (
-        <Card variant="outlined" sx={{ textAlign: 'center', py: 6, px: 3 }}>
-          <HomeWorkIcon sx={{ fontSize: 56, color: 'text.disabled', mb: 1 }} />
-          <Typography variant="h6" gutterBottom>No properties yet</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Get started by adding your first property.
-          </Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/properties/new')}>
-            Add your first property
-          </Button>
-        </Card>
+        <EmptyState
+          icon={<HomeWorkIcon sx={{ fontSize: 56 }} />}
+          title="No properties yet"
+          description="Add your first property to start importing data and generating reports."
+          ctaLabel="Add your first property"
+          ctaHref="/properties/new"
+          ctaDisabled={propertyCreateDisabled}
+        />
       )}
 
       {!loading && items.length > 0 && isMobile && (

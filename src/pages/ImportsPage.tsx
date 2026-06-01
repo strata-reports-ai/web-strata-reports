@@ -17,7 +17,6 @@ import {
   FormControl,
   InputLabel,
   Stack,
-  Button,
   Skeleton,
   Alert,
 } from '@mui/material'
@@ -32,6 +31,7 @@ import {
 } from '../api/importSlice'
 import type { ImportStatus, ImportType, ImportRow } from '../api/importSlice'
 import { ImportDetailDrawer } from '../components/ImportDetailDrawer'
+import { EmptyState } from '../components/common/EmptyState'
 
 const STATUS_COLOR: Record<ImportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   pending: 'default',
@@ -127,27 +127,13 @@ export function ImportsPage() {
       )}
 
       {!isLoading && !isError && imports?.length === 0 && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 8,
-            gap: 2,
-          }}
-        >
-          <UploadFileIcon sx={{ fontSize: 64, color: 'text.disabled' }} />
-          <Typography variant="h6" color="text.secondary">
-            No imports yet
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Upload your first CSV to get started.
-          </Typography>
-          <Button variant="contained" startIcon={<UploadFileIcon />} href="/imports/upload">
-            Upload CSV
-          </Button>
-        </Box>
+        <EmptyState
+          icon={<UploadFileIcon sx={{ fontSize: 56 }} />}
+          title="No imports yet"
+          description="Upload your first CSV to bring revenue, expenses, or task data into Strata Reports."
+          ctaLabel="Upload your first CSV"
+          ctaHref="/imports/upload"
+        />
       )}
 
       {(isLoading || (imports && imports.length > 0)) && (
