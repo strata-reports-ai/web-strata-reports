@@ -113,12 +113,15 @@ jobs:
           GH_DISPATCH_TOKEN: ${{ secrets.GH_DISPATCH_TOKEN }}
           BRANCH: ${{ github.event.inputs.branch || 'main' }}
           PROMPT: ${{ github.event.inputs.prompt || '' }}
-          STEP_OUTPUT: ${{ steps.claude.outputs.output }}
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
         run: |
           if echo "$PROMPT" | grep -qE "You are a code reviewer|REVISION REQUEST for"; then exit 0; fi
           ISSUE_N=$(echo "$BRANCH" | grep -oP 'feature/issue-\K[0-9]+' || true)
           [ -z "$ISSUE_N" ] && ISSUE_N=$(echo "$PROMPT" | grep -oP 'Issue #\K[0-9]+' | head -1 || true)
           [ -z "$ISSUE_N" ] && exit 0
+          # claude-code-action's only output is execution_file; the old STEP_OUTPUT was
+          # always empty so caps were never detected. Read the cap signal from the file.
+          STEP_OUTPUT=$(cat "$EXEC_FILE" 2>/dev/null || echo "")
           if ! echo "$STEP_OUTPUT" | grep -q "Spending cap reached resets"; then
             GH_TOKEN="$GH_DISPATCH_TOKEN" gh issue edit "$ISSUE_N" \
               --repo strata-reports-ai/orchestrator-strata-reports \
