@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts src/config/plans.test.ts"
+    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts src/config/plans.test.ts",
+    "test:mobile": "playwright test --config=playwright.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -24,6 +25,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^20.11.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
