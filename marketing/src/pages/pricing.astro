@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const SIGNUP_URL = 'https://app.stratareport.ai/auth/register'
+
+const plans = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    price: 29,
+    description: 'For owners getting started with strata reporting.',
+    features: [
+      'Up to 5 properties',
+      '4 reports per quarter included',
+      'Email support',
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 79,
+    description: 'For growing portfolios that need more reports.',
+    features: [
+      'Up to 20 properties',
+      '20 reports per quarter included',
+      'Priority email support',
+    ],
+    highlighted: true,
+  },
+  {
+    id: 'scale',
+    name: 'Scale',
+    price: 199,
+    description: 'For high-volume operators who need unlimited reporting.',
+    features: [
+      'Up to 50 properties',
+      'Unlimited reports',
+      'Priority support',
+    ],
+  },
+]
+---
+
+<Layout
+  title="Pricing — StrataReport AI"
+  description="Simple monthly pricing for StrataReport AI. Starter from $29/mo. Pro $79/mo. Scale $199/mo. Cancel anytime."
+>
+  <section class="pricing">
+    <div class="container">
+      <h1 class="section-title">Simple monthly pricing.</h1>
+      <p class="section-sub">Cancel anytime. All prices in AUD.</p>
+      <div class="pricing-grid">
+        {plans.map((p) => (
+          <article class={`plan ${p.highlighted ? 'plan-highlight' : ''}`}>
+            {p.highlighted && <div class="plan-badge">Most popular</div>}
+            <h2 class="plan-name">{p.name}</h2>
+            <p class="plan-desc">{p.description}</p>
+            <p class="plan-price">
+              <span class="price-amount">${p.price}</span>
+              <span class="price-period">/mo</span>
+            </p>
+            <ul class="plan-features" role="list">
+              {p.features.map((feature) => (
+                <li>{feature}</li>
+              ))}
+            </ul>
+            <a class="btn btn-primary plan-cta" href={SIGNUP_URL}>Get started</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
