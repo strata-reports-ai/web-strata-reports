@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { helpArticles } from '../../data/help-articles'
+
+export function getStaticPaths() {
+  return helpArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }))
+}
+
+const { article } = Astro.props
+---
+
+<Layout
+  title={`${article.title} — StrataReport AI Help`}
+  description={article.description}
+  type="article"
+>
+  <article class="prose">
+    <p><a href="/help/">← Back to Help Centre</a></p>
+    <h1>{article.title}</h1>
+    {article.body.map((paragraph) => <p>{paragraph}</p>)}
+    <p>
+      Still stuck? <a href="mailto:support@stratareport.ai">Email support</a>.
+    </p>
+  </article>
+</Layout>

@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const features = [
+  {
+    title: 'AI narrative reports',
+    body:
+      'Plain-English narrative reports that explain what changed, why it matters, and what to do next — no spreadsheet wrangling required.',
+  },
+  {
+    title: 'Multi-source synthesis',
+    body:
+      'Bring rent rolls, ledgers, work orders and meeting minutes into one place. We synthesise them into a single coherent picture.',
+  },
+  {
+    title: '10-minute first report',
+    body:
+      'Upload your CSVs and get a complete first strata report in under ten minutes. No onboarding calls, no setup fees.',
+  },
+  {
+    title: 'Smart column mapping',
+    body:
+      'We recognise hundreds of common column names from popular property-management exports, and prompt you only when something is genuinely ambiguous.',
+  },
+  {
+    title: 'Owner-friendly share links',
+    body:
+      'Send a read-only link to owners and committees — no logins, no installs, no PDFs lost in inboxes.',
+  },
+  {
+    title: 'Australian-built and supported',
+    body:
+      'Built in Australia for Australian strata. Local support team and pricing in AUD.',
+  },
+]
+---
+
+<Layout
+  title="Features — StrataReport AI"
+  description="StrataReport AI features: AI narrative reports, multi-source data synthesis, smart column mapping, owner share links, and 10-minute first reports."
+>
+  <section class="features">
+    <div class="container">
+      <h1 class="section-title">Everything you need to ship a great strata report.</h1>
+      <p class="section-sub">Less time in spreadsheets, more time on what matters.</p>
+      <ul class="feature-grid" role="list">
+        {features.map((f) => (
+          <li class="feature-card">
+            <h2>{f.title}</h2>
+            <p>{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

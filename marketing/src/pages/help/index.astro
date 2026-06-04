@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { helpArticles } from '../../data/help-articles'
+---
+
+<Layout
+  title="Help Centre — StrataReport AI"
+  description="Browse help articles for StrataReport AI: getting started, uploading CSV data, generating reports, billing, and contacting support."
+>
+  <section class="prose">
+    <h1>Help Centre</h1>
+    <p>
+      Browse the topics below or
+      <a href="mailto:support@stratareport.ai">email support</a>
+      if you cannot find what you need.
+    </p>
+    <ul class="help-grid" role="list">
+      {helpArticles.map((article) => (
+        <li class="help-card">
+          <a href={`/help/${article.slug}/`}>{article.title}</a>
+          <p>{article.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>

@@ -1,8 +1,7 @@
 ---
+import Layout from '../layouts/Layout.astro'
+
 const SIGNUP_URL = 'https://app.stratareport.ai/auth/register'
-const APP_URL = 'https://app.stratareport.ai'
-const SITE_URL = 'https://stratareport.ai'
-const OG_IMAGE = `${SITE_URL}/og.png`
 
 const plans = [
   {
@@ -60,504 +59,69 @@ const features = [
 ]
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>StrataReport AI — AI-powered strata reports in minutes</title>
-    <meta
-      name="description"
-      content="StrataReport AI turns rent rolls, ledgers and meeting minutes into clear, narrative strata reports — your first report in under ten minutes."
-    />
-    <link rel="canonical" href={SITE_URL} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={SITE_URL} />
-    <meta property="og:title" content="StrataReport AI — AI-powered strata reports in minutes" />
-    <meta
-      property="og:description"
-      content="Turn rent rolls, ledgers and meeting minutes into clear, narrative strata reports in minutes."
-    />
-    <meta property="og:image" content={OG_IMAGE} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={SITE_URL} />
-    <meta name="twitter:title" content="StrataReport AI — AI-powered strata reports in minutes" />
-    <meta
-      name="twitter:description"
-      content="Turn rent rolls, ledgers and meeting minutes into clear, narrative strata reports in minutes."
-    />
-    <meta name="twitter:image" content={OG_IMAGE} />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container header-row">
-        <a class="brand" href="/" aria-label="StrataReport AI home">
-          <span class="brand-mark" aria-hidden="true">SR</span>
-          <span class="brand-name">StrataReport AI</span>
-        </a>
-        <nav class="site-nav" aria-label="Primary">
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a class="nav-cta" href={SIGNUP_URL}>Sign up</a>
-        </nav>
+<Layout
+  title="StrataReport AI — AI-powered strata reports in minutes"
+  description="StrataReport AI turns rent rolls, ledgers and meeting minutes into clear, narrative strata reports — your first report in under ten minutes."
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>AI-powered strata reports in minutes.</h1>
+      <p class="lede">
+        StrataReport AI synthesises your rent rolls, ledgers and meeting
+        minutes into clear, narrative reports your owners actually read.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={SIGNUP_URL}>Get started free</a>
+        <a class="btn btn-ghost" href="/pricing/">See pricing</a>
       </div>
-    </header>
+      <p class="hero-meta">No credit card required. First report in 10 minutes.</p>
+    </div>
+  </section>
 
-    <main>
-      <section class="hero">
-        <div class="container hero-inner">
-          <h1>AI-powered strata reports in minutes.</h1>
-          <p class="lede">
-            StrataReport AI synthesises your rent rolls, ledgers and meeting
-            minutes into clear, narrative reports your owners actually read.
-          </p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href={SIGNUP_URL}>Get started free</a>
-            <a class="btn btn-ghost" href="#pricing">See pricing</a>
-          </div>
-          <p class="hero-meta">No credit card required. First report in 10 minutes.</p>
-        </div>
-      </section>
+  <section id="features" class="features">
+    <div class="container">
+      <h2 class="section-title">Built for property managers who hate spreadsheets.</h2>
+      <ul class="feature-grid" role="list">
+        {features.map((f) => (
+          <li class="feature-card">
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 
-      <section id="features" class="features">
-        <div class="container">
-          <h2 class="section-title">Built for property managers who hate spreadsheets.</h2>
-          <ul class="feature-grid" role="list">
-            {features.map((f) => (
-              <li class="feature-card">
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section id="pricing" class="pricing">
-        <div class="container">
-          <h2 class="section-title">Simple monthly pricing.</h2>
-          <p class="section-sub">Cancel anytime. All prices in AUD.</p>
-          <div class="pricing-grid">
-            {plans.map((p) => (
-              <article class={`plan ${p.highlighted ? 'plan-highlight' : ''}`}>
-                {p.highlighted && <div class="plan-badge">Most popular</div>}
-                <h3 class="plan-name">{p.name}</h3>
-                <p class="plan-desc">{p.description}</p>
-                <p class="plan-price">
-                  <span class="price-amount">${p.price}</span>
-                  <span class="price-period">/mo</span>
-                </p>
-                <ul class="plan-features" role="list">
-                  {p.features.map((feature) => (
-                    <li>{feature}</li>
-                  ))}
-                </ul>
-                <a class="btn btn-primary plan-cta" href={SIGNUP_URL}>Get started</a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section class="cta-banner">
-        <div class="container cta-banner-inner">
-          <h2>Ready to ship your next report in minutes?</h2>
-          <a class="btn btn-primary" href={SIGNUP_URL}>Create your account</a>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-row">
-        <p class="footer-brand">© {new Date().getFullYear()} StrataReport AI</p>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href={`${APP_URL}/privacy`}>Privacy</a>
-          <a href={`${APP_URL}/terms`}>Terms</a>
-          <a href="mailto:support@stratareport.ai">support@stratareport.ai</a>
-        </nav>
+  <section id="pricing" class="pricing">
+    <div class="container">
+      <h2 class="section-title">Simple monthly pricing.</h2>
+      <p class="section-sub">Cancel anytime. All prices in AUD.</p>
+      <div class="pricing-grid">
+        {plans.map((p) => (
+          <article class={`plan ${p.highlighted ? 'plan-highlight' : ''}`}>
+            {p.highlighted && <div class="plan-badge">Most popular</div>}
+            <h3 class="plan-name">{p.name}</h3>
+            <p class="plan-desc">{p.description}</p>
+            <p class="plan-price">
+              <span class="price-amount">${p.price}</span>
+              <span class="price-period">/mo</span>
+            </p>
+            <ul class="plan-features" role="list">
+              {p.features.map((feature) => (
+                <li>{feature}</li>
+              ))}
+            </ul>
+            <a class="btn btn-primary plan-cta" href={SIGNUP_URL}>Get started</a>
+          </article>
+        ))}
       </div>
-    </footer>
+    </div>
+  </section>
 
-    <style is:global>
-      :root {
-        --c-bg: #ffffff;
-        --c-fg: #0f172a;
-        --c-muted: #475569;
-        --c-border: #e2e8f0;
-        --c-surface: #f8fafc;
-        --c-primary: #2563eb;
-        --c-primary-hover: #1d4ed8;
-        --c-primary-fg: #ffffff;
-        --radius: 12px;
-        --max-width: 1100px;
-      }
-
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family:
-          system-ui,
-          -apple-system,
-          'Segoe UI',
-          Roboto,
-          'Helvetica Neue',
-          Arial,
-          sans-serif;
-        color: var(--c-fg);
-        background: var(--c-bg);
-        line-height: 1.55;
-        -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
-      }
-
-      h1,
-      h2,
-      h3 {
-        line-height: 1.2;
-        margin: 0 0 0.5em;
-        color: var(--c-fg);
-      }
-
-      h1 {
-        font-size: clamp(2rem, 5vw, 3.25rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-
-      h2 {
-        font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-        font-weight: 700;
-        letter-spacing: -0.015em;
-      }
-
-      h3 {
-        font-size: 1.125rem;
-        font-weight: 700;
-      }
-
-      p {
-        margin: 0 0 1em;
-        color: var(--c-muted);
-      }
-
-      a {
-        color: var(--c-primary);
-        text-decoration: none;
-      }
-
-      a:hover,
-      a:focus-visible {
-        text-decoration: underline;
-      }
-
-      .container {
-        max-width: var(--max-width);
-        margin: 0 auto;
-        padding: 0 1.25rem;
-        width: 100%;
-      }
-
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: saturate(180%) blur(6px);
-        border-bottom: 1px solid var(--c-border);
-      }
-
-      .header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 64px;
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        color: var(--c-fg);
-        font-weight: 700;
-      }
-      .brand:hover {
-        text-decoration: none;
-      }
-      .brand-mark {
-        display: inline-grid;
-        place-items: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: var(--c-primary);
-        color: var(--c-primary-fg);
-        font-size: 0.85rem;
-        font-weight: 800;
-      }
-
-      .site-nav {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-      }
-      .site-nav a {
-        color: var(--c-fg);
-        font-weight: 500;
-      }
-      .nav-cta {
-        background: var(--c-primary);
-        color: var(--c-primary-fg) !important;
-        padding: 0.55rem 0.95rem;
-        border-radius: 999px;
-      }
-      .nav-cta:hover {
-        background: var(--c-primary-hover);
-        text-decoration: none;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 44px;
-        padding: 0.65rem 1.25rem;
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 1rem;
-        border: 1px solid transparent;
-        cursor: pointer;
-        transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
-      }
-      .btn-primary {
-        background: var(--c-primary);
-        color: var(--c-primary-fg);
-      }
-      .btn-primary:hover {
-        background: var(--c-primary-hover);
-        text-decoration: none;
-        color: var(--c-primary-fg);
-      }
-      .btn-ghost {
-        background: transparent;
-        color: var(--c-fg);
-        border-color: var(--c-border);
-      }
-      .btn-ghost:hover {
-        background: var(--c-surface);
-        text-decoration: none;
-      }
-
-      .hero {
-        padding: clamp(3rem, 7vw, 6rem) 0 clamp(2rem, 5vw, 4rem);
-        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-      }
-      .hero-inner {
-        max-width: 760px;
-        text-align: center;
-      }
-      .lede {
-        font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-        color: var(--c-muted);
-        margin-bottom: 1.75rem;
-      }
-      .cta-row {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .hero-meta {
-        margin-top: 1.25rem;
-        font-size: 0.9rem;
-        color: var(--c-muted);
-      }
-
-      .features {
-        padding: clamp(2.5rem, 6vw, 5rem) 0;
-      }
-      .section-title {
-        text-align: center;
-        margin-bottom: 0.5rem;
-      }
-      .section-sub {
-        text-align: center;
-        color: var(--c-muted);
-        margin-bottom: 2.5rem;
-      }
-      .feature-grid {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .feature-card {
-        background: var(--c-surface);
-        border: 1px solid var(--c-border);
-        border-radius: var(--radius);
-        padding: 1.5rem;
-      }
-      .feature-card p {
-        margin-bottom: 0;
-      }
-
-      .pricing {
-        padding: clamp(2.5rem, 6vw, 5rem) 0;
-        background: var(--c-surface);
-      }
-      .pricing-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-top: 2rem;
-      }
-      .plan {
-        position: relative;
-        background: #fff;
-        border: 1px solid var(--c-border);
-        border-radius: var(--radius);
-        padding: 1.75rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-      }
-      .plan-highlight {
-        border-color: var(--c-primary);
-        box-shadow: 0 6px 24px rgba(37, 99, 235, 0.12);
-      }
-      .plan-badge {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--c-primary);
-        color: var(--c-primary-fg);
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.75rem;
-        border-radius: 999px;
-      }
-      .plan-name {
-        margin-bottom: 0.25rem;
-      }
-      .plan-desc {
-        font-size: 0.95rem;
-        margin-bottom: 1rem;
-      }
-      .plan-price {
-        margin: 0 0 1rem;
-        display: flex;
-        align-items: baseline;
-        gap: 0.25rem;
-      }
-      .price-amount {
-        font-size: 2.25rem;
-        font-weight: 800;
-        color: var(--c-fg);
-      }
-      .price-period {
-        color: var(--c-muted);
-      }
-      .plan-features {
-        list-style: none;
-        margin: 0 0 1.5rem;
-        padding: 0;
-        display: grid;
-        gap: 0.5rem;
-        flex: 1;
-      }
-      .plan-features li {
-        position: relative;
-        padding-left: 1.5rem;
-        color: var(--c-fg);
-      }
-      .plan-features li::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0.55em;
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 999px;
-        background: var(--c-primary);
-      }
-      .plan-cta {
-        width: 100%;
-      }
-
-      .cta-banner {
-        padding: clamp(2.5rem, 6vw, 5rem) 0;
-      }
-      .cta-banner-inner {
-        text-align: center;
-      }
-      .cta-banner h2 {
-        margin-bottom: 1.5rem;
-      }
-
-      .site-footer {
-        border-top: 1px solid var(--c-border);
-        padding: 1.5rem 0;
-        background: var(--c-bg);
-      }
-      .footer-row {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: center;
-        text-align: center;
-      }
-      .footer-brand {
-        margin: 0;
-        color: var(--c-muted);
-        font-size: 0.9rem;
-      }
-      .footer-nav {
-        display: flex;
-        gap: 1.25rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .footer-nav a {
-        color: var(--c-muted);
-        font-size: 0.9rem;
-      }
-
-      @media (min-width: 768px) {
-        .feature-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .pricing-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .footer-row {
-          flex-direction: row;
-          justify-content: space-between;
-          text-align: left;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          transition: none !important;
-        }
-      }
-    </style>
-  </body>
-</html>
+  <section class="cta-banner">
+    <div class="container cta-banner-inner">
+      <h2>Ready to ship your next report in minutes?</h2>
+      <a class="btn btn-primary" href={SIGNUP_URL}>Create your account</a>
+    </div>
+  </section>
+</Layout>
