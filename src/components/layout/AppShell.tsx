@@ -3,6 +3,7 @@ import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { TopBar } from './TopBar'
 import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
+import { FeedbackWidget } from '../feedback/FeedbackWidget'
 
 const SIDEBAR_WIDTH = 220
 
@@ -21,6 +22,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </Box>
         <BottomNav />
+        <FeedbackWidget />
       </Box>
     )
   }
@@ -35,6 +37,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {children}
           </Box>
         </Box>
+        <FeedbackWidget />
       </Box>
     )
   }
@@ -55,6 +58,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </Box>
       </Box>
+      <FeedbackWidget />
     </Box>
   )
 }
