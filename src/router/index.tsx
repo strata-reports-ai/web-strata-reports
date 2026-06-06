@@ -22,6 +22,7 @@ const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ defau
 const SignUpPage = lazy(() => import('../pages/SignUpPage').then((m) => ({ default: m.SignUpPage })))
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })))
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })))
+const VerifyEmailPage = lazy(() => import('../pages/VerifyEmailPage').then((m) => ({ default: m.VerifyEmailPage })))
 const PricingPage = lazy(() => import('../pages/PricingPage').then((m) => ({ default: m.PricingPage })))
 const PrivacyPage = lazy(() => import('../pages/legal/PrivacyPage').then((m) => ({ default: m.PrivacyPage })))
 const TermsPage = lazy(() => import('../pages/legal/TermsPage').then((m) => ({ default: m.TermsPage })))
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
       { index: true, element: <Lazy><HelpIndexPage /></Lazy> },
       { path: ':slug', element: <Lazy><HelpArticlePage /></Lazy> },
     ],
+  },
+  {
+    path: '/auth/verify-email',
+    element: <Lazy><VerifyEmailPage /></Lazy>,
   },
   {
     path: '/auth',
