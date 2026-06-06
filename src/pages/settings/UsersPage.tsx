@@ -35,8 +35,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
 import type { RootState } from '../../store/store'
 import {
+  useDeactivateUserMutation,
   useListUsersQuery,
-  useUpdateUserRoleMutation,
   type TenantUser,
   type UserRole,
 } from '../../api/usersApi'
@@ -84,7 +84,7 @@ export function UsersPage() {
   const currentUserId = currentUser?.id ?? null
 
   const { data, isLoading, isError, refetch, isFetching } = useListUsersQuery()
-  const [updateUserRole, { isLoading: isDeactivating }] = useUpdateUserRoleMutation()
+  const [deactivateUserMutation, { isLoading: isDeactivating }] = useDeactivateUserMutation()
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
   const [menuUser, setMenuUser] = useState<TenantUser | null>(null)
@@ -122,7 +122,7 @@ export function UsersPage() {
     if (!deactivateUser) return
     setDeactivateError(null)
     try {
-      await updateUserRole({ id: deactivateUser.id, role: 'deactivated' }).unwrap()
+      await deactivateUserMutation(deactivateUser.id).unwrap()
       setSnackbarMessage(
         `${deactivateUser.displayName || deactivateUser.email} has been deactivated`,
       )
