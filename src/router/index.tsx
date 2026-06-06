@@ -17,7 +17,6 @@ const SettingsProfilePage = lazy(() => import('../pages/SettingsProfilePage').th
 const SettingsTenantPage = lazy(() => import('../pages/SettingsTenantPage').then((m) => ({ default: m.SettingsTenantPage })))
 const BillingSettingsPage = lazy(() => import('../pages/BillingSettingsPage').then((m) => ({ default: m.BillingSettingsPage })))
 const TeamSettingsPage = lazy(() => import('../pages/TeamSettingsPage').then((m) => ({ default: m.TeamSettingsPage })))
-const SettingsBrandingPage = lazy(() => import('../pages/SettingsBrandingPage').then((m) => ({ default: m.SettingsBrandingPage })))
 const OnboardingWelcomePage = lazy(() => import('../pages/OnboardingWelcomePage').then((m) => ({ default: m.OnboardingWelcomePage })))
 const WelcomePage = lazy(() => import('../pages/WelcomePage').then((m) => ({ default: m.WelcomePage })))
 const SignInPage = lazy(() => import('../pages/SignInPage').then((m) => ({ default: m.SignInPage })))
@@ -114,7 +113,6 @@ export const router = createBrowserRouter([
           { path: '/settings/tenant', element: <Lazy><SettingsTenantPage /></Lazy> },
           { path: '/settings/billing', element: <Lazy><BillingSettingsPage /></Lazy> },
           { path: '/settings/team', element: <Lazy><TeamSettingsPage /></Lazy> },
-          { path: '/settings/branding', element: <Lazy><SettingsBrandingPage /></Lazy> },
         ],
       },
     ],
