@@ -16,6 +16,9 @@ export const ANALYTICS_EVENTS = {
   plan_changed: 'plan_changed',
   churned: 'churned',
   login: 'login',
+  team_invite_form_viewed: 'team_invite_form_viewed',
+  team_invite_submitted: 'team_invite_submitted',
+  team_invite_failed: 'team_invite_failed',
 } as const
 
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS]
