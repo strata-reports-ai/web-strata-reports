@@ -82,10 +82,25 @@ export function EmailToOwnerDialog({
         status?: number
         data?: { detail?: string; error_message?: string }
       }
-      const detail =
-        apiErr?.data?.detail ??
-        apiErr?.data?.error_message ??
-        'Failed to send email. Please try again.'
+      let detail: string
+      switch (apiErr?.status) {
+        case 404:
+          detail =
+            'Emailing reports is not available yet. Please try again later or contact support.'
+          break
+        case 429:
+          detail = 'Too many email requests. Please wait a moment and try again.'
+          break
+        case 503:
+          detail =
+            'Email service is temporarily unavailable. Please try again in a few minutes.'
+          break
+        default:
+          detail =
+            apiErr?.data?.detail ??
+            apiErr?.data?.error_message ??
+            'Failed to send email. Please try again.'
+      }
       setErrorMessage(detail)
     }
   }
