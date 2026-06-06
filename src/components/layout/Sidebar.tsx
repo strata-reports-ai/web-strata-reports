@@ -15,6 +15,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import SettingsIcon from '@mui/icons-material/Settings'
+import GroupIcon from '@mui/icons-material/Group'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import type { RootState } from '../../store/store'
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { label: 'Reports', icon: <AssessmentIcon />, path: '/reports' },
   { label: 'Imports', icon: <UploadFileIcon />, path: '/imports' },
   { label: 'Settings', icon: <SettingsIcon />, path: '/settings/profile' },
+  { label: 'Team', icon: <GroupIcon />, path: '/settings/users' },
 ]
 
 interface SidebarProps {
@@ -54,7 +56,15 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
   const mailtoHref = buildMailto(tenantId)
 
   const isSelected = (path: string) => {
-    if (path === '/settings/profile') return pathname.startsWith('/settings')
+    if (path === '/settings/users') {
+      return pathname === '/settings/users' || pathname.startsWith('/settings/users/')
+    }
+    if (path === '/settings/profile') {
+      return (
+        pathname.startsWith('/settings') &&
+        !(pathname === '/settings/users' || pathname.startsWith('/settings/users/'))
+      )
+    }
     if (path === '/help') return pathname === '/help' || pathname.startsWith('/help/')
     return pathname === path || pathname.startsWith(path + '/')
   }
