@@ -72,6 +72,7 @@ test('ANALYTICS_EVENTS exposes the expected product event names', () => {
     'plan_changed',
     'property_created',
     'report_downloaded',
+    'report_email_sent',
     'report_generation_started',
     'report_generation_succeeded',
     'signup',

@@ -29,6 +29,7 @@ import {
 } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import EmailIcon from '@mui/icons-material/Email'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import {
   useGetReportQuery,
@@ -37,6 +38,7 @@ import {
 } from '../api/reportSlice'
 import { useReportPolling } from '../hooks/useReportPolling'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
+import { EmailToOwnerDialog } from '../components/reports/EmailToOwnerDialog'
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -104,6 +106,8 @@ export function ReportDetailPage() {
   )
   const [iframeError, setIframeError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false)
+  const [locallySentTo, setLocallySentTo] = useState<string | null>(null)
   const [toast, setToast] = useState<{ severity: 'success' | 'error' | 'info'; message: string } | null>(null)
 
   const {
@@ -257,10 +261,20 @@ export function ReportDetailPage() {
       </Breadcrumbs>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1} sx={{ mb: 2 }}>
-        <Typography variant="h5">
-          {isLoading ? <Skeleton width={240} /> : breadcrumbTitle}
-        </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+          <Typography variant="h5">
+            {isLoading ? <Skeleton width={240} /> : breadcrumbTitle}
+          </Typography>
+          {(report?.sentToOwnerAt || locallySentTo) && (
+            <Chip
+              label="Sent to owner"
+              color="success"
+              size="small"
+              icon={<EmailIcon />}
+            />
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1} flexWrap="wrap">
           {!showPolling && effectiveStatus === 'succeeded' && (
             <Button
               variant="outlined"
@@ -270,6 +284,18 @@ export function ReportDetailPage() {
               sx={{ minHeight: 44, minWidth: 44 }}
             >
               Download PDF
+            </Button>
+          )}
+          {!showPolling && effectiveStatus === 'succeeded' && (
+            <Button
+              variant="outlined"
+              startIcon={<EmailIcon />}
+              onClick={() => setEmailDialogOpen(true)}
+              size={isMobile ? 'small' : 'medium'}
+              sx={{ minHeight: 44, minWidth: 44 }}
+              aria-label="Email report to owner"
+            >
+              Email to owner
             </Button>
           )}
           {!isLoading && (
@@ -453,6 +479,20 @@ export function ReportDetailPage() {
             </Box>
           )}
         </Paper>
+      )}
+
+      {report && (
+        <EmailToOwnerDialog
+          open={emailDialogOpen}
+          onClose={() => setEmailDialogOpen(false)}
+          reportId={report.id}
+          propertyName={report.propertyName}
+          defaultOwnerEmail={report.ownerEmail ?? null}
+          onSent={(email) => {
+            setLocallySentTo(email)
+            setToast({ severity: 'success', message: `Report emailed to ${email}` })
+          }}
+        />
       )}
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="xs" fullWidth>

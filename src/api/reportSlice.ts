@@ -6,6 +6,7 @@ export interface Report {
   id: string
   propertyId: string
   propertyName: string
+  ownerEmail?: string | null
   type: string
   periodStart: string
   periodEnd: string
@@ -18,6 +19,18 @@ export interface Report {
   aiModel: string | null
   generationTimeMs: number | null
   aiCostUsd: number | null
+  sentToOwnerAt?: string | null
+}
+
+export interface EmailToOwnerRequest {
+  reportId: string
+  toEmail: string
+  subject: string
+  message?: string
+}
+
+export interface EmailToOwnerResponse {
+  sentToOwnerAt: string
 }
 
 export type GenerateReportType = 'quarterly_owner' | 'monthly_owner'
@@ -151,6 +164,18 @@ export const reportApi = baseApi.injectEndpoints({
         { type: 'Report', id: 'LIST' },
       ],
     }),
+
+    emailReportToOwner: builder.mutation<EmailToOwnerResponse, EmailToOwnerRequest>({
+      query: ({ reportId, toEmail, subject, message }) => ({
+        url: `reports/${reportId}/email-to-owner`,
+        method: 'POST',
+        body: { toEmail, subject, message },
+      }),
+      invalidatesTags: (_result, _err, { reportId }) => [
+        { type: 'Report', id: reportId },
+        { type: 'Report', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -163,4 +188,5 @@ export const {
   useListReportsQuery,
   useDeleteReportMutation,
   useRegenerateReportMutation,
+  useEmailReportToOwnerMutation,
 } = reportApi
