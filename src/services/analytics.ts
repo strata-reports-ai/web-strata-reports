@@ -13,6 +13,7 @@ export const ANALYTICS_EVENTS = {
   report_generation_started: 'report_generation_started',
   report_generation_succeeded: 'report_generation_succeeded',
   report_downloaded: 'report_downloaded',
+  report_email_sent: 'report_email_sent',
   plan_changed: 'plan_changed',
   churned: 'churned',
   login: 'login',
