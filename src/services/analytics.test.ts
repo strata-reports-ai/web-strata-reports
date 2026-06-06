@@ -62,7 +62,7 @@ test('track() is a no-op when PostHog key is empty (not initialised)', () => {
   assert.equal(resets, 0, 'reset should not be called when uninitialised')
 })
 
-test('ANALYTICS_EVENTS exposes the ten product event names', () => {
+test('ANALYTICS_EVENTS exposes the expected product event names', () => {
   const names = Object.values(ANALYTICS_EVENTS).sort()
   assert.deepEqual(names, [
     'churned',
@@ -75,5 +75,8 @@ test('ANALYTICS_EVENTS exposes the ten product event names', () => {
     'report_generation_started',
     'report_generation_succeeded',
     'signup',
+    'team_invite_failed',
+    'team_invite_form_viewed',
+    'team_invite_submitted',
   ])
 })
