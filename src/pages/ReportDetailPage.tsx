@@ -12,14 +12,17 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
+  IconButton,
   LinearProgress,
   Link,
   Paper,
   Skeleton,
+  Snackbar,
   Stack,
   Step,
   StepLabel,
   Stepper,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -29,7 +32,7 @@ import RefreshIcon from '@mui/icons-material/Refresh'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import {
   useGetReportQuery,
-  useGenerateReportMutation,
+  useRegenerateReportMutation,
   type ReportStatus,
 } from '../api/reportSlice'
 import { useReportPolling } from '../hooks/useReportPolling'
@@ -101,7 +104,7 @@ export function ReportDetailPage() {
   )
   const [iframeError, setIframeError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [regenerateError, setRegenerateError] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ severity: 'success' | 'error' | 'info'; message: string } | null>(null)
 
   const {
     data: report,
@@ -114,7 +117,7 @@ export function ReportDetailPage() {
     isPolling && id ? id : null,
   )
 
-  const [generateReport, { isLoading: isRegenerating }] = useGenerateReportMutation()
+  const [regenerateReport, { isLoading: isRegenerating }] = useRegenerateReportMutation()
 
   const effectiveStatus: ReportStatus | undefined = isPolling
     ? polledStatus ?? 'queued'
@@ -157,20 +160,46 @@ export function ReportDetailPage() {
 
   const handleRegenerateConfirm = async () => {
     setConfirmOpen(false)
-    if (!report) return
+    if (!id) return
     try {
-      const result = await generateReport({
-        propertyId: report.propertyId,
-        type: report.type,
-        periodStart: report.periodStart,
-        periodEnd: report.periodEnd,
-      }).unwrap()
-      setRegenerateError(null)
-      navigate(`/reports/${result.reportId}`, { state: { startPolling: true } })
-    } catch {
-      setRegenerateError('Failed to regenerate report. Please try again.')
+      await regenerateReport(id).unwrap()
+      setToast({ severity: 'success', message: 'Regeneration queued' })
+      track(ANALYTICS_EVENTS.report_generation_started, { report_id: id })
+      setIsPolling(true)
+    } catch (err: unknown) {
+      const apiErr = err as {
+        status?: number
+        data?: { detail?: string; error_message?: string }
+      }
+      let message: string
+      switch (apiErr?.status) {
+        case 409:
+          message = 'This report is already generating. Try again when it finishes.'
+          break
+        case 429:
+          message =
+            "You've reached your daily report limit. Upgrade your plan or wait until tomorrow."
+          break
+        case 503:
+          message =
+            'Report generation is temporarily unavailable. Please try again in a few minutes.'
+          break
+        default:
+          message =
+            apiErr?.data?.detail ??
+            apiErr?.data?.error_message ??
+            'Could not regenerate report.'
+      }
+      setToast({ severity: 'error', message })
     }
   }
+
+  const isInProgress =
+    effectiveStatus === 'queued' ||
+    effectiveStatus === 'generating' ||
+    effectiveStatus === 'processing'
+  const regenerateDisabled = isRegenerating || isInProgress
+  const regenerateTooltip = isInProgress ? 'Already in progress' : ''
 
   const periodLabel =
     report ? getPeriodLabel(report.periodStart) : ''
@@ -238,20 +267,39 @@ export function ReportDetailPage() {
               startIcon={<DownloadIcon />}
               onClick={handleDownload}
               size={isMobile ? 'small' : 'medium'}
+              sx={{ minHeight: 44, minWidth: 44 }}
             >
               Download PDF
             </Button>
           )}
-          {!showPolling && !isLoading && (
-            <Button
-              variant="contained"
-              startIcon={<RefreshIcon />}
-              onClick={() => setConfirmOpen(true)}
-              disabled={isRegenerating}
-              size={isMobile ? 'small' : 'medium'}
-            >
-              Regenerate
-            </Button>
+          {!isLoading && (
+            <Tooltip title={regenerateTooltip}>
+              <span>
+                {isMobile ? (
+                  <IconButton
+                    color="primary"
+                    onClick={() => setConfirmOpen(true)}
+                    disabled={regenerateDisabled}
+                    aria-label="Regenerate report"
+                    sx={{ minHeight: 44, minWidth: 44 }}
+                  >
+                    <RefreshIcon />
+                  </IconButton>
+                ) : (
+                  <Button
+                    variant="contained"
+                    startIcon={<RefreshIcon />}
+                    onClick={() => setConfirmOpen(true)}
+                    disabled={regenerateDisabled}
+                    size="medium"
+                    aria-label="Regenerate report"
+                    sx={{ minHeight: 44 }}
+                  >
+                    Regenerate
+                  </Button>
+                )}
+              </span>
+            </Tooltip>
           )}
         </Stack>
       </Stack>
@@ -349,12 +397,6 @@ export function ReportDetailPage() {
         </Paper>
       )}
 
-      {regenerateError && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setRegenerateError(null)}>
-          {regenerateError}
-        </Alert>
-      )}
-
       {downloadError && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setDownloadError(null)}>
           {downloadError}
@@ -414,19 +456,33 @@ export function ReportDetailPage() {
       )}
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>Regenerate report?</DialogTitle>
+        <DialogTitle>Regenerate this report?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This will replace the existing PDF. Are you sure you want to regenerate?
+            This will replace the current PDF and AI narrative. The existing PDF will be permanently
+            overwritten.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
-          <Button onClick={handleRegenerateConfirm} color="primary" variant="contained">
+          <Button onClick={handleRegenerateConfirm} color="error" variant="contained">
             Regenerate
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={!!toast}
+        autoHideDuration={5000}
+        onClose={() => setToast(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        {toast ? (
+          <Alert severity={toast.severity} onClose={() => setToast(null)} sx={{ width: '100%' }}>
+            {toast.message}
+          </Alert>
+        ) : undefined}
+      </Snackbar>
     </Box>
   )
 }

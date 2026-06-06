@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts src/config/plans.test.ts src/components/feedback/FeedbackWidget.test.ts",
+    "test": "node --test --experimental-strip-types src/services/analytics.test.ts src/services/mobileViewport.test.ts src/config/plans.test.ts src/components/feedback/FeedbackWidget.test.ts src/pages/ReportDetailPage.test.ts",
     "test:mobile": "playwright test --config=playwright.config.ts"
   },
   "dependencies": {
