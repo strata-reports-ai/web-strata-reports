@@ -20,13 +20,42 @@ export interface Report {
   aiCostUsd: number | null
 }
 
-export interface GenerateReportRequest {
+export type GenerateReportType = 'quarterly_owner' | 'monthly_owner'
+
+export interface GenerateQuarterlyReportRequest {
+  propertyId: string
+  reportType: 'quarterly_owner'
+  quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4'
+  year: number
+  periodStart: string
+  periodEnd: string
+  customNote?: string
+  type?: string
+}
+
+export interface GenerateMonthlyReportRequest {
+  propertyId: string
+  reportType: 'monthly_owner'
+  month: number
+  year: number
+  periodStart: string
+  periodEnd: string
+  customNote?: string
+  type?: string
+}
+
+export interface GenerateLegacyReportRequest {
   propertyId: string
   type: string
   periodStart: string
   periodEnd: string
   customNote?: string
 }
+
+export type GenerateReportRequest =
+  | GenerateQuarterlyReportRequest
+  | GenerateMonthlyReportRequest
+  | GenerateLegacyReportRequest
 
 export interface GenerateReportResponse {
   reportId: string
