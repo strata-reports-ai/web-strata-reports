@@ -111,6 +111,17 @@ export const reportApi = baseApi.injectEndpoints({
         { type: 'Report', id: 'LIST' },
       ],
     }),
+
+    regenerateReport: builder.mutation<GenerateReportResponse, string>({
+      query: (id) => ({
+        url: `reports/${id}/regenerate`,
+        method: 'POST',
+      }),
+      invalidatesTags: (_result, _err, id) => [
+        { type: 'Report', id },
+        { type: 'Report', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -122,4 +133,5 @@ export const {
   useLazyGetReportQuery,
   useListReportsQuery,
   useDeleteReportMutation,
+  useRegenerateReportMutation,
 } = reportApi
