@@ -21,8 +21,8 @@ export function ResetPasswordPage() {
       setErrorMessage('Missing or invalid reset token. Please request a new password reset link.')
       return
     }
-    if (newPassword.length < 8) {
-      setErrorMessage('Password must be at least 8 characters long.')
+    if (newPassword.length < 12) {
+      setErrorMessage('Password must be at least 12 characters long.')
       return
     }
     if (newPassword !== confirmPassword) {
@@ -35,9 +35,15 @@ export function ResetPasswordPage() {
       setSuccess(true)
       setTimeout(() => navigate('/auth/signin'), 2000)
     } catch (err) {
-      const status = (err as { status?: number }).status
+      const error = err as { status?: number; data?: { detail?: string; title?: string } }
+      const status = error.status
+      const detail = error.data?.detail
       if (status === 400) {
-        setErrorMessage('Your reset link is invalid or has expired. Please request a new one.')
+        if (detail) {
+          setErrorMessage(detail)
+        } else {
+          setErrorMessage('Your reset link is invalid or has expired. Please request a new one.')
+        }
       } else {
         setErrorMessage('Something went wrong. Please try again.')
       }
