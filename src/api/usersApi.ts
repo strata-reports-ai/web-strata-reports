@@ -4,7 +4,7 @@ export type InvitationRole = 'admin' | 'member'
 
 export type UserRole = 'owner' | 'admin' | 'member'
 
-export type UpdatableUserRole = UserRole | 'deactivated'
+export type UpdatableUserRole = UserRole
 
 export interface InviteUserRequest {
   email: string
@@ -74,6 +74,13 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['User'],
     }),
+    deactivateUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 })
 
@@ -82,4 +89,5 @@ export const {
   useGetPendingInvitationsQuery,
   useListUsersQuery,
   useUpdateUserRoleMutation,
+  useDeactivateUserMutation,
 } = usersApi
