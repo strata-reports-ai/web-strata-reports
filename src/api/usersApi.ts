@@ -4,8 +4,6 @@ export type InvitationRole = 'admin' | 'member'
 
 export type UserRole = 'owner' | 'admin' | 'member'
 
-export type UpdatableUserRole = UserRole
-
 export interface InviteUserRequest {
   email: string
   role: InvitationRole
@@ -45,7 +43,7 @@ export interface ListUsersResponse {
 
 export interface UpdateUserRoleRequest {
   id: string
-  role: UpdatableUserRole
+  role: UserRole
 }
 
 export const usersApi = baseApi.injectEndpoints({
