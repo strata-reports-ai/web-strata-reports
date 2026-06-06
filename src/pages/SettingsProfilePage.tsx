@@ -15,6 +15,9 @@ export function SettingsProfilePage() {
         <Link component={RouterLink} to="/settings/billing" underline="hover">
           Billing
         </Link>
+        <Link component={RouterLink} to="/settings/branding" underline="hover">
+          Branding
+        </Link>
       </Stack>
     </Box>
   )
