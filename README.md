@@ -1,6 +1,44 @@
 # web-strata-reports
 
-React 18 + TypeScript SPA for StrataReport AI. Vite + MUI v6 + RTK Query.
+The frontend for **StrataReport AI** — a React 18 + TypeScript single-page app where short-term-rental property managers upload operational data and generate polished, owner-facing quarterly PDF reports in under two minutes. Part of the [StrataReport AI](https://github.com/strata-reports-ai/orchestrator-strata-reports) system (see that repo for the full architecture and the autonomous build pipeline that produced this code).
+
+## Stack
+
+- **React 18** + **TypeScript** + **Vite 6**
+- **MUI v6** for components/theming
+- **Redux Toolkit + RTK Query** for state and API data fetching
+- **React Router 6** for routing
+- **Playwright** for end-to-end tests
+- Deployed to **Azure Static Web Apps**
+
+## Features (by page)
+
+- **Onboarding** — guided first-run: create a property, upload a CSV, generate a first report
+- **Properties** — manage units (`PropertiesPage`, `PropertyDetailPage`, `PropertyFormPage`)
+- **Imports** — upload and track CSV ingestion batches (`ImportsPage`)
+- **Reports** — generate, list, and view quarterly owner reports with PDF download (`GenerateReportPage`, `ReportsListPage`, `ReportDetailPage`)
+- **Billing** — Stripe-backed subscription management (`BillingSettingsPage`, `PricingPage`)
+- **Settings** — profile, tenant, branding (logo upload), and team/invite management
+- **Auth** — sign up, sign in, email verification, password reset (`SignUpPage`, `SignInPage`, `VerifyEmailPage`, `ForgotPasswordPage`, `ResetPasswordPage`)
+- **Marketing site** — separate static marketing pages deployed alongside the app
+
+## Project structure
+
+```
+src/
+├── pages/        # Route-level screens (dashboard, reports, properties, settings, auth, onboarding)
+├── features/     # Feature slices (RTK)
+├── api/          # RTK Query API definitions (talks to fn-strata-reports /api)
+├── components/   # Shared UI components
+├── router/       # Route configuration
+├── services/     # Cross-cutting services (analytics, etc.)
+├── store/        # Redux store setup
+├── hooks/        # Shared hooks
+├── content/      # Static copy/content
+└── theme.ts      # MUI theme
+```
+
+The SPA talks to the backend ([`fn-strata-reports`](https://github.com/strata-reports-ai/fn-strata-reports)) over `/api`. Auth uses httpOnly cookies set by the backend, so tokens are never stored in JS-accessible storage.
 
 ## Scripts
 
