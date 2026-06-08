@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { Box, CircularProgress } from '@mui/material'
 import { App } from '../App'
 import { ProtectedRoute } from '../components/routing/ProtectedRoute'
 import { AuthRoute } from '../components/routing/AuthRoute'
+import { RootRoute } from '../components/routing/RootRoute'
 
 const DashboardPage = lazy(() => import('../pages/DashboardPage').then((m) => ({ default: m.DashboardPage })))
 const PropertiesPage = lazy(() => import('../pages/PropertiesPage').then((m) => ({ default: m.PropertiesPage })))
@@ -50,7 +51,7 @@ function Lazy({ children }: { children: React.ReactNode }) {
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: <RootRoute />,
   },
   {
     path: '/pricing',
