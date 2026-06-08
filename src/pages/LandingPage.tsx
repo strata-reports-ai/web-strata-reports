@@ -12,7 +12,6 @@ import {
   useTheme,
 } from '@mui/material'
 import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined'
-import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined'
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
