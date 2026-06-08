@@ -24,7 +24,7 @@ type Feature = { icon: ReactNode; title: string; body: string }
 
 const STEPS: { n: string; title: string; body: string }[] = [
   { n: '01', title: 'Upload your data', body: 'Drop in CSV exports from your PMS, accounting, and review platforms — revenue, expenses, reviews, tasks, and inspections.' },
-  { n: '02', title: 'AI writes the narrative', body: 'StrataReport computes the numbers in code, then has AI write a clear quarterly story bound to those verified figures.' },
+  { n: '02', title: 'AI writes the narrative', body: 'StayRecap computes the numbers in code, then has AI write a clear quarterly story bound to those verified figures.' },
   { n: '03', title: 'Send a branded PDF', body: 'Download a polished, owner-ready PDF with charts and your branding — ready to send in about two minutes.' },
 ]
 
@@ -50,7 +50,7 @@ export function LandingPage() {
           <Toolbar disableGutters sx={{ gap: 1 }}>
             <InsightsOutlinedIcon sx={{ color: primary, mr: 1 }} />
             <Typography variant="h6" sx={{ fontWeight: 800, flexGrow: 1, letterSpacing: '-0.02em' }}>
-              StrataReport&nbsp;AI
+              StayRecap
             </Typography>
             <Button color="inherit" onClick={() => navigate('/pricing')} sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>
               Pricing
@@ -74,7 +74,7 @@ export function LandingPage() {
             <Box component="span" sx={{ color: primary }}>write themselves.</Box>
           </Typography>
           <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400, maxWidth: 720, mx: 'auto', mb: 4 }}>
-            StrataReport AI turns messy short-term-rental data — PMS exports, expense sheets, guest reviews — into a
+            StayRecap turns messy short-term-rental data — PMS exports, expense sheets, guest reviews — into a
             polished, owner-ready quarterly PDF with an AI-written narrative bound to verified numbers. In under two minutes.
           </Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" alignItems="center">
@@ -158,7 +158,7 @@ export function LandingPage() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="space-between" alignItems="center">
             <Stack direction="row" spacing={1} alignItems="center">
               <InsightsOutlinedIcon sx={{ color: primary, fontSize: 20 }} />
-              <Typography variant="body2" sx={{ fontWeight: 700 }}>StrataReport AI</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 700 }}>StayRecap</Typography>
             </Stack>
             <Stack direction="row" spacing={3}>
               <Button size="small" color="inherit" onClick={() => navigate('/pricing')} sx={{ color: 'text.secondary' }}>Pricing</Button>
@@ -167,7 +167,7 @@ export function LandingPage() {
               <Button size="small" color="inherit" onClick={() => navigate('/help')} sx={{ color: 'text.secondary' }}>Help</Button>
             </Stack>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              © {new Date().getFullYear()} StrataReport AI
+              © {new Date().getFullYear()} StayRecap
             </Typography>
           </Stack>
         </Container>

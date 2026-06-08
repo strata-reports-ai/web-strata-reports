@@ -22,7 +22,7 @@ export function TopBar({ onMenuClick, showMenuButton }: TopBarProps) {
           </IconButton>
         )}
         <Typography variant="h6" component="div" noWrap sx={{ flexGrow: 1 }}>
-          StrataReport AI
+          StayRecap
         </Typography>
       </Toolbar>
     </AppBar>

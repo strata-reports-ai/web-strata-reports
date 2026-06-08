@@ -4,7 +4,7 @@ A failed upload almost always falls into one of three categories: the file forma
 
 ## File format issues
 
-StrataReport AI accepts UTF-8 encoded CSV files up to 25 MB. If you exported your data as an Excel workbook (.xlsx), open it in your spreadsheet program and choose "Save as" or "Export" to produce a CSV. Tab-separated files and files with semicolon delimiters are also accepted; the engine auto-detects the delimiter from the first few rows.
+StayRecap accepts UTF-8 encoded CSV files up to 25 MB. If you exported your data as an Excel workbook (.xlsx), open it in your spreadsheet program and choose "Save as" or "Export" to produce a CSV. Tab-separated files and files with semicolon delimiters are also accepted; the engine auto-detects the delimiter from the first few rows.
 
 ## Missing required columns
 

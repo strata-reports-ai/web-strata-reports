@@ -56,7 +56,7 @@ export function SignInPage() {
       >
         <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
         <Typography variant="h5" fontWeight={700} mb={3}>
-          Sign in to StrataReport AI
+          Sign in to StayRecap
         </Typography>
         <Stack spacing={2}>
           <TextField

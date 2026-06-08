@@ -1,6 +1,6 @@
 # How do I cancel my subscription?
 
-You can cancel your StrataReport AI subscription at any time from the Billing settings page. Open Settings from the main navigation, choose the Billing tab, and click "Cancel subscription" near the bottom of the page. We will ask you to confirm and to tell us briefly why you are leaving so we can keep improving the product.
+You can cancel your StayRecap subscription at any time from the Billing settings page. Open Settings from the main navigation, choose the Billing tab, and click "Cancel subscription" near the bottom of the page. We will ask you to confirm and to tell us briefly why you are leaving so we can keep improving the product.
 
 Cancellation takes effect at the end of your current billing period, so you will keep full access to your reports, properties, and uploads until that date. We do not pro-rate refunds for partial months, but you will not be billed again after cancellation.
 

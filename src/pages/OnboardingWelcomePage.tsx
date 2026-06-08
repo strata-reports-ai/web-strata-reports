@@ -17,7 +17,7 @@ export function OnboardingWelcomePage() {
       }}
     >
       <Typography variant="h4" fontWeight={700} gutterBottom>
-        Welcome to StrataReport AI
+        Welcome to StayRecap
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 480 }}>
         Let's get you set up. Add your first property, upload data, and generate your first report.

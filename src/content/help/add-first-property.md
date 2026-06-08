@@ -1,6 +1,6 @@
 # How do I add my first property?
 
-Getting your first property into StrataReport AI takes about two minutes. Sign in to your account and open the Properties page from the left-hand navigation, then click "Add property" in the top-right corner.
+Getting your first property into StayRecap takes about two minutes. Sign in to your account and open the Properties page from the left-hand navigation, then click "Add property" in the top-right corner.
 
 You will be asked for a few basic details: the property name, street address, number of bedrooms, and the platform you currently use to manage bookings (Hostaway, Airbnb, or Other). Only the name and address are strictly required, but filling in the other fields up front lets the report engine produce richer insights later.
 

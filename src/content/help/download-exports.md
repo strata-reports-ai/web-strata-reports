@@ -4,7 +4,7 @@ Each platform stores its CSV exports in a slightly different location. Here is t
 
 ## Hostaway
 
-Sign in to Hostaway and open Reports from the left navigation. Choose "Consolidated financial report", set the date range you want to include, and click "Export CSV" in the top-right corner. The download will include reservations, payouts, and channel fees in a single file that StrataReport AI can ingest directly.
+Sign in to Hostaway and open Reports from the left navigation. Choose "Consolidated financial report", set the date range you want to include, and click "Export CSV" in the top-right corner. The download will include reservations, payouts, and channel fees in a single file that StayRecap can ingest directly.
 
 ## Airbnb
 

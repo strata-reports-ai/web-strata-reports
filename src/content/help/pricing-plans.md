@@ -1,6 +1,6 @@
 # What's included in each pricing plan?
 
-StrataReport AI offers three subscription tiers designed to grow with your portfolio. All plans include unlimited CSV uploads, the full column-mapping wizard, and email support.
+StayRecap offers three subscription tiers designed to grow with your portfolio. All plans include unlimited CSV uploads, the full column-mapping wizard, and email support.
 
 ## Starter
 

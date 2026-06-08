@@ -6,11 +6,11 @@ Last updated: 2026-06-01
 
 ## 1. Acceptance of Terms
 
-By accessing or using the StrataReport AI service (the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service.
+By accessing or using the StayRecap service (the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service.
 
 ## 2. The Service
 
-StrataReport AI provides AI-assisted tools for generating strata and property reports. The Service is provided on an "as is" and "as available" basis.
+StayRecap provides AI-assisted tools for generating strata and property reports. The Service is provided on an "as is" and "as available" basis.
 
 ## 3. Accounts
 
@@ -51,7 +51,7 @@ We may update these Terms from time to time. Material changes will be notified t
 
 ## 11. Governing Law
 
-These Terms are governed by the laws of the jurisdiction in which StrataReport AI is registered, without regard to conflict of law principles.
+These Terms are governed by the laws of the jurisdiction in which StayRecap is registered, without regard to conflict of law principles.
 
 ## 12. Contact
 

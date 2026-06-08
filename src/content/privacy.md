@@ -6,7 +6,7 @@ Last updated: 2026-06-01
 
 ## 1. Introduction
 
-StrataReport AI ("we", "us", or "our") operates the StrataReport AI service (the "Service"). This Privacy Policy explains how we collect, use, and disclose information when you use our Service.
+StayRecap ("we", "us", or "our") operates the StayRecap service (the "Service"). This Privacy Policy explains how we collect, use, and disclose information when you use our Service.
 
 By using the Service, you agree to the collection and use of information in accordance with this policy.
 

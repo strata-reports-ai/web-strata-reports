@@ -20,7 +20,7 @@ export function LegalFooter() {
         alignItems="center"
       >
         <Typography variant="body2" color="text.secondary">
-          &copy; {new Date().getFullYear()} StrataReport AI
+          &copy; {new Date().getFullYear()} StayRecap
         </Typography>
         <Link component={RouterLink} to="/legal/privacy" variant="body2" color="text.secondary" underline="hover">
           Privacy Policy

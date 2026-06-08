@@ -46,7 +46,7 @@ export function HelpIndexPage() {
           Help center
         </Typography>
         <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-          Answers to the most common questions about StrataReport AI.
+          Answers to the most common questions about StayRecap.
         </Typography>
         <TextField
           fullWidth

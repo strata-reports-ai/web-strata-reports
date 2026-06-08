@@ -75,7 +75,7 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
     <Box sx={{ width: SIDEBAR_WIDTH, overflowX: 'hidden' }}>
       <Toolbar>
         <Typography variant="subtitle1" fontWeight={700} noWrap>
-          StrataReport AI
+          StayRecap
         </Typography>
       </Toolbar>
       <List>

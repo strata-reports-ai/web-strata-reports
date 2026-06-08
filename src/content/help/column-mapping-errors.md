@@ -1,6 +1,6 @@
 # How do I fix column-mapping errors?
 
-When you upload a CSV with column headers that the engine does not recognise, the column-mapping wizard opens automatically. It shows each unmapped header on the left and a drop-down of standard StrataReport AI fields on the right. Pick the matching field for each header, then click "Apply mapping" to retry the upload.
+When you upload a CSV with column headers that the engine does not recognise, the column-mapping wizard opens automatically. It shows each unmapped header on the left and a drop-down of standard StayRecap fields on the right. Pick the matching field for each header, then click "Apply mapping" to retry the upload.
 
 The wizard remembers your choices for each source platform. The next time you upload a file with the same headers, the mapping is applied automatically and the wizard does not appear. If you need to change a saved mapping later, open the Imports page, click the gear icon next to the source name, and edit the mapping rules.
 
