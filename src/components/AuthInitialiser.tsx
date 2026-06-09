@@ -4,13 +4,17 @@ import { useGetMeQuery } from '../api/authApi'
 import { setCredentials, clearCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
 import { identify, resetAnalytics } from '../services/analytics'
+import { isDemo } from '../demo/demoMode'
 
 export function AuthInitialiser() {
   const dispatch = useDispatch<AppDispatch>()
-  const { data, isError } = useGetMeQuery()
+  const { data, isError } = useGetMeQuery(undefined, { skip: isDemo() })
   const identifiedUserIdRef = useRef<string | null>(null)
 
   useEffect(() => {
+    // In demo mode the fake demo user is set by DemoEntryPage; never let the real
+    // /users/me check clear it (otherwise a direct /demo load or refresh bounces to sign-in).
+    if (isDemo()) return
     if (data) {
       dispatch(setCredentials(data))
       if (identifiedUserIdRef.current !== data.id) {
