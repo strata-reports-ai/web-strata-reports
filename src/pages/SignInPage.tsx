@@ -8,6 +8,7 @@ import { setCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
 import { LegalFooter } from '../components/layout/LegalFooter'
+import { exitDemo } from '../demo/demoMode'
 
 export function SignInPage() {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ export function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSessionError(null)
+    exitDemo()
     const result = await login({ email, password }).unwrap().catch(() => null)
     if (!result) return
     const meResult = await dispatch(authApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))

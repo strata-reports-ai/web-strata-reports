@@ -81,7 +81,10 @@ export function LandingPage() {
             <Button variant="contained" size="large" disableElevation onClick={() => navigate('/auth/signup')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
               Get started free
             </Button>
-            <Button variant="outlined" size="large" onClick={() => navigate('/auth/signin')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
+            <Button variant="outlined" size="large" onClick={() => navigate('/demo')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
+              View demo
+            </Button>
+            <Button variant="text" size="large" onClick={() => navigate('/auth/signin')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
               Sign in
             </Button>
           </Stack>

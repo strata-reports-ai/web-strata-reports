@@ -1,12 +1,23 @@
 import { useState } from 'react'
 import { Box, Button, Checkbox, FormControlLabel, Link, Stack, TextField, Typography } from '@mui/material'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
 import { LegalFooter } from '../components/layout/LegalFooter'
+import { exitDemo } from '../demo/demoMode'
+import { clearCredentials } from '../store/authSlice'
+import type { AppDispatch } from '../store/store'
 
 export function SignUpPage() {
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
   const [agreed, setAgreed] = useState(false)
+
+  const handleSignUp = () => {
+    exitDemo()
+    dispatch(clearCredentials())
+    track(ANALYTICS_EVENTS.signup)
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden' }}>
@@ -54,7 +65,7 @@ export function SignUpPage() {
               variant="contained"
               fullWidth
               disabled={!agreed}
-              onClick={() => track(ANALYTICS_EVENTS.signup)}
+              onClick={handleSignUp}
             >
               Sign up
             </Button>
