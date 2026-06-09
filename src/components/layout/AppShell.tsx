@@ -5,8 +5,6 @@ import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { FeedbackWidget } from '../feedback/FeedbackWidget'
 
-const SIDEBAR_WIDTH = 220
-
 export function AppShell({ children }: { children: React.ReactNode }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -51,7 +49,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          ml: isDesktop ? `${SIDEBAR_WIDTH}px` : 0,
         }}
       >
         <Box component="main" sx={{ flex: 1, minWidth: 0 }}>
