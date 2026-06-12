@@ -2,6 +2,7 @@ import type { FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/reac
 import type { DashboardSummary, AuditLogEvent } from '../api/dashboardApi'
 import type { PropertyListItem, PropertyListResponse, PropertyFilterOptions } from '../api/propertiesApi'
 import type { Report, ListReportsResponse, PreflightResult } from '../api/reportSlice'
+import type { ImportRow, ImportDetail } from '../api/importSlice'
 
 type DemoResult = { data: unknown } | { error: FetchBaseQueryError }
 
@@ -118,6 +119,55 @@ const demoPreflight: PreflightResult = {
   missingTypes: [],
 }
 
+// The imports endpoint returns a bare array (ImportRow[]), not a paged object —
+// the Imports page calls .map() on the result, so the fixture must be an array.
+const demoImports: ImportRow[] = [
+  {
+    id: 'demo-import-revenue',
+    fileName: 'march-revenue.csv',
+    importType: 'Revenue',
+    propertyId: DEMO_PROPERTY_ID,
+    propertyName: 'Blue Ridge Cabin',
+    uploadedAt: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
+    status: 'succeeded',
+    recordsImported: 16,
+    totalRecords: 16,
+    blobPath: 'demo/march-revenue.csv',
+  },
+  {
+    id: 'demo-import-expenses',
+    fileName: 'q1-expenses.csv',
+    importType: 'Expenses',
+    propertyId: DEMO_PROPERTY_ID,
+    propertyName: 'Blue Ridge Cabin',
+    uploadedAt: new Date(Date.now() - 1000 * 60 * 60 * 27).toISOString(),
+    status: 'succeeded',
+    recordsImported: 23,
+    totalRecords: 23,
+    blobPath: 'demo/q1-expenses.csv',
+  },
+  {
+    id: 'demo-import-reviews',
+    fileName: 'guest-reviews.csv',
+    importType: 'Reviews',
+    propertyId: DEMO_PROPERTY_ID,
+    propertyName: 'Blue Ridge Cabin',
+    uploadedAt: new Date(Date.now() - 1000 * 60 * 60 * 28).toISOString(),
+    status: 'succeeded',
+    recordsImported: 9,
+    totalRecords: 9,
+    blobPath: 'demo/guest-reviews.csv',
+  },
+]
+
+const demoImportDetail: ImportDetail = {
+  ...demoImports[0],
+  errorSummary: null,
+  columnMapping: null,
+  skippedRows: 0,
+  failedRowMessages: [],
+}
+
 const demoEmptyList = { items: [], totalCount: 0, page: 1, pageSize: 25 }
 
 function demoNudge(): FetchBaseQueryError {
@@ -152,7 +202,8 @@ export function demoResolve(args: string | FetchArgs): DemoResult {
   if (path === 'reports') return { data: demoReports }
   if (path.startsWith('reports/')) return { data: demoReport }
 
-  if (path === 'imports') return { data: demoEmptyList }
+  if (path === 'imports') return { data: demoImports }
+  if (path.startsWith('imports/')) return { data: demoImportDetail }
 
   // Unknown read endpoint — return a benign empty list so screens render rather than crash.
   return { data: demoEmptyList }

@@ -2,17 +2,9 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Box, CircularProgress } from '@mui/material'
-import { enterDemo } from '../demo/demoMode'
+import { enterDemo, DEMO_USER } from '../demo/demoMode'
 import { setCredentials } from '../store/authSlice'
 import type { AppDispatch } from '../store/store'
-
-const DEMO_USER = {
-  id: 'demo-user',
-  email: 'demo@stayrecap.app',
-  displayName: 'Demo User',
-  role: 'owner',
-  isEmailVerified: true,
-}
 
 export function DemoEntryPage() {
   const navigate = useNavigate()

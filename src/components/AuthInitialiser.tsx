@@ -4,7 +4,7 @@ import { useGetMeQuery } from '../api/authApi'
 import { setCredentials, clearCredentials } from '../store/authSlice'
 import { AppDispatch } from '../store/store'
 import { identify, resetAnalytics } from '../services/analytics'
-import { isDemo } from '../demo/demoMode'
+import { isDemo, DEMO_USER } from '../demo/demoMode'
 
 export function AuthInitialiser() {
   const dispatch = useDispatch<AppDispatch>()
@@ -12,9 +12,14 @@ export function AuthInitialiser() {
   const identifiedUserIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    // In demo mode the fake demo user is set by DemoEntryPage; never let the real
-    // /users/me check clear it (otherwise a direct /demo load or refresh bounces to sign-in).
-    if (isDemo()) return
+    // In demo mode, (re)establish the fake demo user on every load. DemoEntryPage
+    // sets it on initial entry, but a refresh or deep-link to a protected route
+    // remounts with empty auth state — without this, `initialised` never flips true
+    // and ProtectedRoute renders nothing, leaving a blank page.
+    if (isDemo()) {
+      dispatch(setCredentials(DEMO_USER))
+      return
+    }
     if (data) {
       dispatch(setCredentials(data))
       if (identifiedUserIdRef.current !== data.id) {
