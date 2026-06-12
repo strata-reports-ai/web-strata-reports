@@ -12,6 +12,7 @@ import {
   useTheme,
 } from '@mui/material'
 import InsightsOutlinedIcon from '@mui/icons-material/InsightsOutlined'
+import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined'
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined'
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
@@ -78,18 +79,43 @@ export function LandingPage() {
             polished, owner-ready quarterly PDF with an AI-written narrative bound to verified numbers. In under two minutes.
           </Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" alignItems="center">
-            <Button variant="contained" size="large" disableElevation onClick={() => navigate('/auth/signup')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
+            <Button
+              variant="contained"
+              size="large"
+              disableElevation
+              startIcon={<PlayCircleFilledRoundedIcon />}
+              onClick={() => navigate('/demo')}
+              sx={{
+                px: 5,
+                py: 1.6,
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                boxShadow: `0 10px 30px ${primary}55`,
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 14px 36px ${primary}66` },
+              }}
+            >
+              Try the live demo
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={() => navigate('/auth/signup')}
+              sx={{ px: 4, py: 1.4, fontSize: '1rem' }}
+            >
               Get started free
             </Button>
-            <Button variant="outlined" size="large" onClick={() => navigate('/demo')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
-              View demo
-            </Button>
-            <Button variant="text" size="large" onClick={() => navigate('/auth/signin')} sx={{ px: 4, py: 1.25, fontSize: '1rem' }}>
+            <Button
+              variant="text"
+              size="large"
+              onClick={() => navigate('/auth/signin')}
+              sx={{ px: 2, py: 1.4, fontSize: '1rem' }}
+            >
               Sign in
             </Button>
           </Stack>
           <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', mt: 2 }}>
-            Start free and try it with sample data — no setup required.
+            No sign-up required — explore a fully interactive demo with sample data.
           </Typography>
         </Container>
       </Box>
