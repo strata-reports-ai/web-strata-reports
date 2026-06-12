@@ -103,7 +103,15 @@ function PropertyCard({ property, onEdit, onDelete }: PropertyCardProps) {
   return (
     <Card variant="outlined" sx={{ mb: 1.5 }}>
       <CardContent sx={{ pb: 0 }}>
-        <Typography variant="subtitle1" fontWeight={700}>{property.name}</Typography>
+        <Link
+          component={RouterLink}
+          to={`/properties/${property.id}`}
+          underline="hover"
+          variant="subtitle1"
+          sx={{ fontWeight: 700 }}
+        >
+          {property.name}
+        </Link>
         <Typography variant="body2" color="text.secondary">{property.city}</Typography>
         <Typography variant="body2" color="text.secondary">{property.ownerName}</Typography>
         <Typography variant="body2">Units: {property.units}</Typography>
@@ -389,7 +397,15 @@ export function PropertiesPage() {
             <TableBody>
               {items.map((property) => (
                 <TableRow key={property.id} hover>
-                  <TableCell>{property.name}</TableCell>
+                  <TableCell>
+                    <Link
+                      component={RouterLink}
+                      to={`/properties/${property.id}`}
+                      underline="hover"
+                    >
+                      {property.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>{property.city}</TableCell>
                   <TableCell>{property.ownerName}</TableCell>
                   <TableCell align="right">{property.units}</TableCell>
