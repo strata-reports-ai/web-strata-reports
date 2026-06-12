@@ -517,7 +517,7 @@ export function ReportsListPage() {
         </>
       ) : (
         (isLoading || visibleReports.length > 0) && (
-          <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
+          <TableContainer component={Paper} sx={{ overflowX: 'auto' }} data-tour="reports-table">
             <Table size="small" aria-label="reports table">
               <TableHead>
                 <TableRow>

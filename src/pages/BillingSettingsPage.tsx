@@ -156,7 +156,7 @@ export function BillingSettingsPage() {
         </Alert>
       )}
 
-      <Card variant="outlined" sx={{ mb: 2 }}>
+      <Card variant="outlined" sx={{ mb: 2 }} data-tour="billing-usage">
         <CardContent>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}

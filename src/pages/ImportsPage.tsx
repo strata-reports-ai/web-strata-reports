@@ -140,6 +140,7 @@ export function ImportsPage() {
         <TableContainer
           component={Paper}
           sx={{ overflowX: 'auto' }}
+          data-tour="imports-table"
         >
           <Table size="small" aria-label="imports table">
             <TableHead>

@@ -178,7 +178,7 @@ export function DashboardPage() {
         </Alert>
       )}
 
-      <Grid2 container spacing={2} sx={{ mb: 3 }}>
+      <Grid2 container spacing={2} sx={{ mb: 3 }} data-tour="dashboard-stats">
         {kpiCards.map((card) => (
           <Grid2
             key={card.label}
@@ -200,6 +200,7 @@ export function DashboardPage() {
           onClick={() => navigate('/reports/generate')}
           sx={{ minHeight: 44 }}
           fullWidth={isMobile}
+          data-tour="generate-report"
         >
           Generate Report
         </Button>

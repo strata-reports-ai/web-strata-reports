@@ -369,7 +369,7 @@ export function PropertiesPage() {
       )}
 
       {!loading && items.length > 0 && isMobile && (
-        <Box>
+        <Box data-tour="properties-table">
           {items.map((property) => (
             <PropertyCard
               key={property.id}
@@ -382,7 +382,7 @@ export function PropertiesPage() {
       )}
 
       {!loading && items.length > 0 && !isMobile && (
-        <Box sx={{ overflowX: 'auto' }}>
+        <Box sx={{ overflowX: 'auto' }} data-tour="properties-table">
           <Table size="small">
             <TableHead>
               <TableRow>
