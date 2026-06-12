@@ -11,8 +11,7 @@ import {
 } from '@mui/material'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../../store/store'
+import { useNavigate } from 'react-router-dom'
 
 interface HelpMenuProps {
   open: boolean
@@ -20,25 +19,12 @@ interface HelpMenuProps {
   onClose: () => void
 }
 
-const SUPPORT_EMAIL = 'support@stratareport.ai'
-
-function buildMailto(tenantId: string | null): string {
-  if (tenantId) {
-    return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
-      `Support request [tenant:${tenantId}]`,
-    )}`
-  }
-  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Support request')}`
-}
-
 export function HelpMenu({ open, anchorEl, onClose }: HelpMenuProps) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const user = useSelector((state: RootState) => state.auth.user)
-  const tenantId = user?.id ?? null
+  const navigate = useNavigate()
 
   const helpCenterUrl = import.meta.env.VITE_HELP_CENTER_URL ?? ''
-  const mailtoHref = buildMailto(tenantId)
 
   const content = (
     <List sx={{ minWidth: 240, py: 1 }}>
@@ -61,9 +47,10 @@ export function HelpMenu({ open, anchorEl, onClose }: HelpMenuProps) {
       )}
       <ListItem disablePadding>
         <ListItemButton
-          component="a"
-          href={mailtoHref}
-          onClick={onClose}
+          onClick={() => {
+            navigate('/help/contact-support')
+            onClose()
+          }}
           sx={{ minHeight: 44 }}
         >
           <ListItemIcon sx={{ minWidth: 40 }}>

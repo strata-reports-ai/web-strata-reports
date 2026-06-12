@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import {
   Box,
   Drawer,
@@ -18,11 +17,8 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import GroupIcon from '@mui/icons-material/Group'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
-import type { RootState } from '../../store/store'
 
 const SIDEBAR_WIDTH = 220
-
-const SUPPORT_EMAIL = 'support@stratareport.ai'
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -39,21 +35,9 @@ interface SidebarProps {
   onClose: () => void
 }
 
-function buildMailto(tenantId: string | null): string {
-  if (tenantId) {
-    return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
-      `Support request [tenant:${tenantId}]`,
-    )}`
-  }
-  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Support request')}`
-}
-
 export function Sidebar({ variant, open, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const user = useSelector((state: RootState) => state.auth.user)
-  const tenantId = user?.id ?? null
-  const mailtoHref = buildMailto(tenantId)
 
   const isSelected = (path: string) => {
     if (path === '/settings/users') {
@@ -108,8 +92,10 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
                   <ListItemText primary="Help" />
                 </ListItemButton>
                 <ListItemButton
-                  component="a"
-                  href={mailtoHref}
+                  onClick={() => {
+                    navigate('/help/contact-support')
+                    if (variant === 'temporary') onClose()
+                  }}
                   sx={{ minHeight: 44 }}
                 >
                   <ListItemIcon sx={{ minWidth: 40 }}>
