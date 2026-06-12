@@ -19,6 +19,7 @@ import AddchartIcon from '@mui/icons-material/Addchart'
 import { useGetPropertyQuery } from '../api/propertiesApi'
 import { useListReportsQuery, type ReportStatus } from '../api/reportSlice'
 import { useListImportsQuery, type ImportStatus } from '../api/importSlice'
+import { parseDateOnly } from '../utils/dates'
 
 const REPORT_STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -43,11 +44,11 @@ function importStatusColor(status: ImportStatus): 'default' | 'success' | 'error
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString()
+  return parseDateOnly(dateStr).toLocaleDateString()
 }
 
 function periodLabel(periodStart: string): string {
-  const dt = new Date(periodStart)
+  const dt = parseDateOnly(periodStart)
   return `Q${Math.floor(dt.getMonth() / 3) + 1} ${dt.getFullYear()}`
 }
 

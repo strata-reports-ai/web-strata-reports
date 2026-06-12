@@ -39,6 +39,7 @@ import {
 import { useReportPolling } from '../hooks/useReportPolling'
 import { track, ANALYTICS_EVENTS } from '../services/analytics'
 import { EmailToOwnerDialog } from '../components/reports/EmailToOwnerDialog'
+import { parseDateOnly } from '../utils/dates'
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -71,7 +72,7 @@ function getActiveStep(status: ReportStatus): number {
 }
 
 function getPeriodLabel(periodStart: string): string {
-  const start = new Date(periodStart)
+  const start = parseDateOnly(periodStart)
   const month = start.getMonth()
   const year = start.getFullYear()
   const quarter = Math.floor(month / 3) + 1

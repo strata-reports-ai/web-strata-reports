@@ -52,6 +52,7 @@ import {
   type ListReportsParams,
 } from '../api/reportSlice'
 import { useGetPropertiesQuery } from '../api/propertiesApi'
+import { parseDateOnly } from '../utils/dates'
 
 const STATUS_COLOR: Record<ReportStatus, 'default' | 'info' | 'success' | 'error' | 'warning'> = {
   queued: 'default',
@@ -72,8 +73,8 @@ const STATUS_LABEL: Record<ReportStatus, string> = {
 const ALL_STATUSES: ReportStatus[] = ['queued', 'generating', 'succeeded', 'failed']
 
 function formatPeriod(periodStart: string, periodEnd: string): string {
-  const start = new Date(periodStart)
-  const end = new Date(periodEnd)
+  const start = parseDateOnly(periodStart)
+  const end = parseDateOnly(periodEnd)
   const startQ = Math.ceil((start.getMonth() + 1) / 3)
   const endQ = Math.ceil((end.getMonth() + 1) / 3)
   const startYear = start.getFullYear()

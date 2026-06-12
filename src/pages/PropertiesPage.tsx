@@ -47,6 +47,7 @@ import {
   type PropertyListParams,
 } from '../api/propertiesApi'
 import { useBillingGate } from '../hooks/useBillingGate'
+import { parseDateOnly } from '../utils/dates'
 
 type SortBy = 'name' | 'last_report_date' | 'last_import_date'
 type SortDir = 'asc' | 'desc'
@@ -63,7 +64,7 @@ function useDebounce<T>(value: T, delay: number): T {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString()
+  return parseDateOnly(dateStr).toLocaleDateString()
 }
 
 interface DeleteDialogProps {
