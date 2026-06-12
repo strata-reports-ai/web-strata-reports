@@ -3,6 +3,7 @@ import type { DashboardSummary, AuditLogEvent } from '../api/dashboardApi'
 import type { PropertyListItem, PropertyListResponse, PropertyFilterOptions } from '../api/propertiesApi'
 import type { Report, ListReportsResponse, PreflightResult } from '../api/reportSlice'
 import type { ImportRow, ImportDetail } from '../api/importSlice'
+import type { BillingStatusResponse } from '../api/billingApi'
 
 type DemoResult = { data: unknown } | { error: FetchBaseQueryError }
 
@@ -51,10 +52,17 @@ const demoDashboardSummary: DashboardSummary = {
   recentActivity: demoRecentActivity,
 }
 
-const demoBillingStatus = {
-  status: 'trialing' as const,
+// Includes the usage counts the Billing page renders ("used / limit"); without
+// them the page shows a bare "/" with empty progress bars. Numbers match the
+// dashboard (1 property, 1 report this quarter) on the Starter plan (5 / 4).
+const demoBillingStatus: BillingStatusResponse = {
+  status: 'trialing',
   trialEndsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 12).toISOString(),
   plan: 'starter',
+  propertiesUsed: 1,
+  propertiesLimit: 5,
+  reportsThisQuarter: 1,
+  reportsQuota: 4,
 }
 
 const demoMe = {
