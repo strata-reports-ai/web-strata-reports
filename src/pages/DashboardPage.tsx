@@ -117,7 +117,7 @@ function EmptyStateChecklist() {
               variant="outlined"
               size="small"
               startIcon={<AddchartIcon />}
-              onClick={() => navigate('/reports/generate')}
+              onClick={() => navigate('/reports/new')}
               sx={{ minWidth: 44, minHeight: 44 }}
             >
               Generate
@@ -197,7 +197,7 @@ export function DashboardPage() {
         <Button
           variant="contained"
           startIcon={<AddchartIcon />}
-          onClick={() => navigate('/reports/generate')}
+          onClick={() => navigate('/reports/new')}
           sx={{ minHeight: 44 }}
           fullWidth={isMobile}
           data-tour="generate-report"

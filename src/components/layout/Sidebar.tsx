@@ -17,6 +17,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import GroupIcon from '@mui/icons-material/Group'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined'
 
 const SIDEBAR_WIDTH = 220
 
@@ -78,6 +79,19 @@ export function Sidebar({ variant, open, onClose }: SidebarProps) {
             </ListItemButton>
             {index === reportsIndex && (
               <>
+                <ListItemButton
+                  selected={isSelected('/how-to')}
+                  onClick={() => {
+                    navigate('/how-to')
+                    if (variant === 'temporary') onClose()
+                  }}
+                  sx={{ minHeight: 44 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <SchoolOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="How-To" />
+                </ListItemButton>
                 <ListItemButton
                   selected={isSelected('/help')}
                   onClick={() => {

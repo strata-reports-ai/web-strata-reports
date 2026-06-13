@@ -36,6 +36,7 @@ const UploadDataStep = lazy(() => import('../pages/onboarding/UploadDataStep').t
 const GenerateReportStep = lazy(() => import('../pages/onboarding/GenerateReportStep').then((m) => ({ default: m.GenerateReportStep })))
 const OnboardingSuccess = lazy(() => import('../pages/onboarding/OnboardingSuccess').then((m) => ({ default: m.OnboardingSuccess })))
 const DemoEntryPage = lazy(() => import('../pages/DemoEntryPage').then((m) => ({ default: m.DemoEntryPage })))
+const HowToPage = lazy(() => import('../pages/HowToPage').then((m) => ({ default: m.HowToPage })))
 
 function PageLoader() {
   return (
@@ -108,6 +109,7 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
           { path: '/dashboard', element: <Lazy><DashboardPage /></Lazy> },
+          { path: '/how-to', element: <Lazy><HowToPage /></Lazy> },
           { path: '/properties', element: <Lazy><PropertiesPage /></Lazy> },
           { path: '/properties/new', element: <Lazy><PropertyFormPage /></Lazy> },
           { path: '/properties/:id', element: <Lazy><PropertyDetailPage /></Lazy> },

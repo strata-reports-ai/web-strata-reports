@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux'
 import { Box, Button, IconButton, Paper, Popper, Stack, Typography, useTheme } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { isDemo, exitDemo } from './demoMode'
-import { TOUR_STEPS, START_TOUR_EVENT } from './tourSteps'
+import { TOUR_STEPS, START_TOUR_EVENT, type TourStep } from './tourSteps'
+import { getGuide } from './howToGuides'
 import { clearCredentials } from '../store/authSlice'
 import type { AppDispatch } from '../store/store'
 
@@ -26,20 +27,29 @@ export function DemoTour() {
 
   const [active, setActive] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
+  const [steps, setSteps] = useState<TourStep[]>(TOUR_STEPS)
   const [targetEl, setTargetEl] = useState<HTMLElement | null>(null)
   const [searchFailed, setSearchFailed] = useState(false)
   const [, reposition] = useReducer((x) => x + 1, 0)
 
-  // Auto-start once per demo session.
+  // Auto-start the full product tour once per demo session.
   useEffect(() => {
     if (!isDemo() || sessionStorage.getItem(TOUR_DONE_KEY)) return
-    const t = setTimeout(() => setActive(true), 800)
+    const t = setTimeout(() => {
+      setSteps(TOUR_STEPS)
+      setStepIndex(0)
+      setActive(true)
+    }, 800)
     return () => clearTimeout(t)
   }, [])
 
-  // Relaunch when the banner button fires the event.
+  // Launch on demand: the banner ("Take a tour" → full tour) or the How-To page
+  // ("Show me how" → a specific guide), carried in the event's `guideId`.
   useEffect(() => {
-    const start = () => {
+    const start = (e: Event) => {
+      const guideId = (e as CustomEvent<{ guideId?: string }>).detail?.guideId
+      const guide = guideId ? getGuide(guideId) : undefined
+      setSteps(guide && guide.steps.length > 0 ? guide.steps : TOUR_STEPS)
       sessionStorage.removeItem(TOUR_DONE_KEY)
       setTargetEl(null)
       setSearchFailed(false)
@@ -53,7 +63,7 @@ export function DemoTour() {
   // Locate the spotlight target for the current step (navigating there first).
   useEffect(() => {
     if (!active) return
-    const step = TOUR_STEPS[stepIndex]
+    const step = steps[stepIndex]
     if (!step) return
     setTargetEl(null)
     setSearchFailed(false)
@@ -90,7 +100,7 @@ export function DemoTour() {
       cancelAnimationFrame(raf)
       clearTimeout(startTimer)
     }
-  }, [active, stepIndex, location.pathname, navigate])
+  }, [active, stepIndex, steps, location.pathname, navigate])
 
   // Keep the spotlight aligned while the page scrolls or resizes.
   useEffect(() => {
@@ -104,12 +114,12 @@ export function DemoTour() {
     }
   }, [active])
 
-  if (!isDemo() || !active) return null
+  if (!active) return null
 
-  const step = TOUR_STEPS[stepIndex]
+  const step = steps[stepIndex]
   if (!step) return null
 
-  const isLast = stepIndex === TOUR_STEPS.length - 1
+  const isLast = stepIndex === steps.length - 1
   const rect = targetEl?.getBoundingClientRect()
   const showCard = Boolean(rect) || searchFailed || !step.selector
   const centered = !rect
@@ -133,7 +143,7 @@ export function DemoTour() {
     <Paper elevation={8} sx={{ p: 2.5, width: 360, maxWidth: 'calc(100vw - 32px)', borderRadius: 2 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
         <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: '0.08em' }}>
-          Step {stepIndex + 1} of {TOUR_STEPS.length}
+          Step {stepIndex + 1} of {steps.length}
         </Typography>
         <IconButton size="small" onClick={finish} aria-label="Close tour" sx={{ mt: -1, mr: -1 }}>
           <CloseIcon fontSize="small" />
@@ -155,13 +165,13 @@ export function DemoTour() {
               Back
             </Button>
           )}
-          {isLast ? (
+          {step.cta === 'signup' ? (
             <Button size="small" variant="contained" onClick={handleSignUp}>
               Sign up
             </Button>
           ) : (
             <Button size="small" variant="contained" onClick={next}>
-              Next
+              {isLast ? 'Done' : 'Next'}
             </Button>
           )}
         </Stack>

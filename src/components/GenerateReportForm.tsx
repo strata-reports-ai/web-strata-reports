@@ -218,7 +218,7 @@ export function GenerateReportForm({ onSuccess, onError }: GenerateReportFormPro
   const yearOptions = Array.from({ length: 10 }, (_, i) => currentYear - i)
 
   return (
-    <Box component="form" noValidate>
+    <Box component="form" noValidate data-tour="generate-form">
       <Stack spacing={3}>
         <Autocomplete
           options={propertyOptions}

@@ -1,4 +1,4 @@
-/** Event the demo banner dispatches to (re)launch the guided tour. */
+/** Event the demo banner / how-to page dispatches to (re)launch a guided tour. */
 export const START_TOUR_EVENT = 'stayrecap:start-tour'
 
 export interface TourStep {
@@ -10,6 +10,16 @@ export interface TourStep {
   body: string
   /** Preferred side for the callout relative to the spotlighted element. */
   placement?: 'top' | 'bottom' | 'left' | 'right'
+  /** Primary action on this step. 'signup' shows a Sign-up CTA (product tour finale). */
+  cta?: 'signup'
+}
+
+/**
+ * Launch a guided tour. With no id, runs the full product tour; with a guide id
+ * (see howToGuides), runs that guide's walkthrough.
+ */
+export function startTour(guideId?: string): void {
+  window.dispatchEvent(new CustomEvent(START_TOUR_EVENT, { detail: { guideId } }))
 }
 
 export const TOUR_STEPS: TourStep[] = [
@@ -59,5 +69,6 @@ export const TOUR_STEPS: TourStep[] = [
     route: '/dashboard',
     title: "That's the tour!",
     body: 'Everything here runs on realistic sample data. Sign up to connect your own properties and generate real owner reports — or close this and keep exploring the demo on your own.',
+    cta: 'signup',
   },
 ]
