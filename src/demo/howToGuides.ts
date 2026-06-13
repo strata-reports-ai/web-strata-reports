@@ -67,6 +67,22 @@ export const HOW_TO_GUIDES: HowToGuide[] = [
     ],
   },
   {
+    id: 'upload-csv',
+    title: 'Upload a CSV file',
+    description: 'Bring revenue, expenses, reviews and more into StayRecap.',
+    category: 'Data',
+    keywords: ['upload', 'csv', 'import', 'data', 'file', 'revenue', 'expenses', 'add'],
+    steps: [
+      {
+        route: '/imports/upload',
+        selector: 'upload-dropzone',
+        title: 'Upload a CSV',
+        body: 'Choose the property and the type of data, then drag a CSV in (or click to browse). StayRecap maps the columns and pulls the records in automatically — you’ll see it appear in your import history.',
+        placement: 'top',
+      },
+    ],
+  },
+  {
     id: 'import-history',
     title: 'Track your data imports',
     description: 'See every CSV import and whether it processed successfully.',

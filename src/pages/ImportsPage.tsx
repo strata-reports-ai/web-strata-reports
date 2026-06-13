@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Box,
+  Button,
   Typography,
   Table,
   TableBody,
@@ -53,6 +55,7 @@ export function ImportsPage() {
     propertyId: propertyFilter || undefined,
   })
 
+  const navigate = useNavigate()
   const [reprocess] = useReprocessImportMutation()
   const [triggerDownload] = useLazyGetDownloadUrlQuery()
 
@@ -86,9 +89,24 @@ export function ImportsPage() {
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom>
-        Import History
-      </Typography>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+        gap={1}
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h5">Import History</Typography>
+        <Button
+          variant="contained"
+          startIcon={<UploadFileIcon />}
+          onClick={() => navigate('/imports/upload')}
+          sx={{ minHeight: 44 }}
+        >
+          Upload CSV
+        </Button>
+      </Stack>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2 }} useFlexGap flexWrap="wrap">
         <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 160 } }}>
