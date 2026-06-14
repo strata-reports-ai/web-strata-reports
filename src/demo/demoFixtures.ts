@@ -4,6 +4,7 @@ import type { PropertyListItem, PropertyListResponse, PropertyFilterOptions } fr
 import type { Report, ListReportsResponse, PreflightResult } from '../api/reportSlice'
 import type { ImportRow, ImportDetail } from '../api/importSlice'
 import type { BillingStatusResponse } from '../api/billingApi'
+import type { TenantBranding } from '../api/brandingApi'
 
 type DemoResult = { data: unknown } | { error: FetchBaseQueryError }
 
@@ -176,6 +177,13 @@ const demoImportDetail: ImportDetail = {
   failedRowMessages: [],
 }
 
+const demoBranding: TenantBranding = {
+  primaryColorHex: '#1976d2',
+  reportFooterText: 'Prepared by Blue Ridge Hospitality — questions? hello@blueridge.example',
+  logoBlobPath: null,
+  logoUrl: null,
+}
+
 const demoEmptyList = { items: [], totalCount: 0, page: 1, pageSize: 25 }
 
 function demoNudge(): FetchBaseQueryError {
@@ -199,6 +207,7 @@ export function demoResolve(args: string | FetchArgs): DemoResult {
   if (path === 'audit-log') return { data: demoRecentActivity }
   if (path === 'users/me') return { data: demoMe }
   if (path === 'billing/status' || path === 'billing') return { data: demoBillingStatus }
+  if (path === 'tenant/branding') return { data: demoBranding }
 
   // Properties (check specific sub-routes before the generic single-item match)
   if (path === 'properties/filter-options') return { data: demoPropertyFilterOptions }
